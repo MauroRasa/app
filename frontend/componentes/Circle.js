@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import { StyleSheet, Dimensions, Text, Animated, View } from 'react-native';
 import * as Font from 'expo-font';
 
 const loadCustomFont = async () => {
@@ -8,8 +8,9 @@ const loadCustomFont = async () => {
   });
 };
 
-const CircleComponent = () => {
+const CircleComponent = ({ modals }) => {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const [circleTopValue] = useState(new Animated.Value(-1.4));
 
   useEffect(() => {
     async function loadFont() {
@@ -18,48 +19,73 @@ const CircleComponent = () => {
     }
 
     loadFont();
-
-    const updateDimensions = () => {
-      setWindowDimensions(Dimensions.get('window'));
-    };
-
-    Dimensions.addEventListener('change', updateDimensions);
-
-    return () => {
-      // No es necesario eliminar el oyente en versiones más recientes de React Native
-    };
   }, []);
 
-  const [windowDimensions, setWindowDimensions] = useState(Dimensions.get('window'));
-  const textSize = windowDimensions.width * 0.55;
-  const textTop = -textSize / 0.88;
-  const circleSize = windowDimensions.width * 1.2;
-  const circleTop = -circleSize / 2;
+  const windowHeight = Dimensions.get('window').height;
+  const windowWidth = Dimensions.get('window').width;
+  const textSize = windowWidth * 0.55;
+  const textTop = (windowHeight / 2.7) - (textSize / 1);
+  const circleSizeAncho = windowWidth * 1.1;
+  const circleSizeAlto = windowHeight * 0.55;
+  const initialCircleTop = -1.4;
+  const finalCircleTop = -1;
+
+  useEffect(() => {
+    const { isModalVisible, isLoginModalVisible } = modals;
+    if (isModalVisible || isLoginModalVisible) {
+      Animated.timing(circleTopValue, {
+        toValue: finalCircleTop,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(circleTopValue, {
+        toValue: initialCircleTop,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [modals, circleTopValue]);
 
   return (
     <View style={styles.container}>
-      <View style={[styles.circle, { top: circleTop, width: circleSize, height: circleSize }]}>
-      </View>
-      {fontLoaded ? (
-        <Text style={[styles.text, { fontFamily: 'Plaster-Regular', fontSize: 40, color: 'white', width: '70%', top: textTop ,textAlign: 'center', }]}>FitPlan Gains</Text>
-      ) : (
-        <Text>Loading...</Text>
-      )}
+      <Animated.View
+        style={[
+          styles.circle,
+          {
+            transform: [
+              {
+                translateY: circleTopValue.interpolate({
+                  inputRange: [-2.2, -1.5],
+                  outputRange: [0, (initialCircleTop - finalCircleTop) * circleSizeAlto],
+                }),
+              },
+            ],
+            width: circleSizeAncho,
+            height: circleSizeAlto,
+          },
+        ]}
+      >
+        {fontLoaded ? (
+          <Text style={[styles.text, { fontFamily: 'Plaster-Regular', fontSize: 40, color: 'white', width: '70%', textAlign: 'center', marginBottom: 0, top: textTop }]}>FitPlan Gains</Text>
+        ) : (
+          <Text>Loading...</Text>
+        )}
+      </Animated.View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
   },
   circle: {
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(128, 128, 128, 0.7)',
     borderRadius: 999,
-    position: 'absolute',
   },
 });
 

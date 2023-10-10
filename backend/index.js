@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   user: 'root',
   password: '',
   port: 3306,
-  database: 'usuarios',
+  database: 'fitplangains',
 });
 
 db.connect((err) => {
@@ -22,32 +22,24 @@ db.connect((err) => {
   console.log('Conexión a la base de datos MySQL establecida');
 });
 
-// Obtener todos los usuarios
-app.get('/api/usuarios', (req, res) => {
-  const sql = 'SELECT * FROM usuarios';
-  db.query(sql, (err, result) => {
-    if (err) {
-      throw err;
-    }
-    res.json(result);
-  });
-});
+app.post('/api/usuariosprincipal', (req, res) => {
+  const { usuario, email, password } = req.body;
 
-// Actualizar un usuario por su ID
-app.post('/api/usuarios/:id', (req, res) => {
-  const { id } = req.params;
-  const { nombre, apellido, domicilio } = req.body;
-  try {
-    const sql = 'UPDATE usuarios SET nombre = ?, apellido = ?, domicilio = ? WHERE id = ?';
-    db.query(sql, [nombre, apellido, domicilio, id], (err, result) => {
-      if (err) {
-        throw err;
-      }
-      res.json({ message: 'Usuario actualizado exitosamente', id });
-    });
-    }catch (error) {
-      res.status(500).json({ error: 'Ocurrió un error al actualizar el usuario' });
+  // Verificar que todos los campos estén presentes
+  if (!usuario || !email || !password) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  // Realizar la consulta SQL para insertar el usuario en la base de datos
+  const sql = 'INSERT INTO usuariosprincipal (usuario, email, password) VALUES (?, ?, ?)';
+  db.query(sql, [usuario, email, password], (err, result) => {
+    if (err) {
+      console.error('Error al insertar usuario en la base de datos:', err);
+      return res.status(500).json({ error: 'Error en la base de datos' });
     }
+    console.log('Usuario insertado correctamente');
+    res.status(201).json({ message: 'Usuario insertado correctamente' });
+  });
 });
 
 app.listen(port, () => {

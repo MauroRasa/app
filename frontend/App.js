@@ -1,24 +1,21 @@
-import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native-web";
-import MainStack from "./navigation/MainStack"
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './screens/HomeScreen';
+import Inicio from './screens/Inicio';
+import { BottomTab } from './navigation/BottomTab';
 
-export default function App(){ 
-    return(
+const Stack = createStackNavigator();
 
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="AppPrincipal">
+        <Stack.Screen name="inicio" component={Inicio} options={{ headerShown: false }}/>
+        <Stack.Screen name="AppPrincipal" component={BottomTab} options={{ headerShown: false }} />
+        <Stack.Screen name="home" component={Home} options={{ headerShown: false }}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
-        <SafeAreaView style = {{ flex : 1}}>
-
-            <MainStack />
-
-        </SafeAreaView>
-    )};
-
-    const styles = StyleSheet.create({
-
-        container: {
-            alignItems: 'center',
-            background: 'ffffff',
-            flex: 1,
-            justifyContent: 'center'
-        }
-    })
+export default App;

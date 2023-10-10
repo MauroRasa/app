@@ -1,20 +1,14 @@
+import { View, Text } from 'react-native';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Bienvenido a la pantalla de inicio</Text>
-    </View>
-  );
+    return (
+        <View style = {{ padding: 15 }}>
+            <Text style = {{ fontSize: 32, fontWeight: 'bold' }}>Bienvenido</Text>
+        </View>
+    );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default HomeScreen;
