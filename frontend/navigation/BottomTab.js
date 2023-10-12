@@ -1,6 +1,6 @@
 import { createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View} from 'react-native';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -10,6 +10,8 @@ import Componente3 from './componentes/Componente3';
 import Screen1 from './screens/Screen1';
 import Screen2 from './screens/Screen2';
 import Screen3 from './screens/Screen3';
+import { getCurrentComponent } from './componentes/navigationUtils';
+
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -17,6 +19,40 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export const BottomTab = () => {
+    const [currentComponent, setCurrentComponent] = useState(getCurrentComponent());
+
+
+    function logCurrentComponent() {
+        const currentComponent = getCurrentComponent();
+        console.log(`Estás en el componente: ${currentComponent}`);
+    }
+    
+    logCurrentComponent();
+    const interval = setInterval(logCurrentComponent, 5000);
+
+
+    let componentToRender;
+
+    if (currentComponent === 'Componente1') {
+        componentToRender = <Componente1 />;
+    } else if (currentComponent === 'Componente2') {
+        componentToRender = <Componente2 />;
+    } else if (currentComponent === 'Componente3') {
+        componentToRender = <Componente3 />;
+    } else {
+        componentToRender = <p>Componente no encontrado</p>;
+    }
+
+    useEffect(() => {
+        const updateComponent = () => {
+        setCurrentComponent(getCurrentComponent());
+        };
+
+        updateComponent();
+
+        return () => { 
+        };
+    }, []);
     
     return (
         <Tab.Navigator
@@ -39,30 +75,18 @@ export const BottomTab = () => {
                     if (route.name === 'Componente1') {
                         return (
                           <View style={{ flex: 1 }}>
-                            <Componente1/>
+                            {componentToRender} 
                           </View>
                         );
-                    }else if(route.name === 'Componente2'){
-                        return (
-                            <View style={{ flex: 1 }}>
-                              <Componente2/>
-                            </View>
-                          );
-                    }else if(route.name === 'Componente3'){
-                        return (
-                            <View style={{ flex: 1 }}>
-                              <Componente3/>
-                            </View>
-                          );
                     }
 
                     return <Icon name = { iconName } size = { size } color = { color } />
                 }
-            })}
+            })} 
         >
             <Tab.Screen name = 'Home' component = { HomeScreen } />
             <Tab.Screen name = 'Profile' component = { ProfileScreen } />
-            <Tab.Screen name = 'Componente1'>
+            <Tab.Screen name = 'Componente1' options={{ headerShown: false }}>
                 {() => (
                 <Stack.Navigator>
                     <Stack.Screen name="Componente1" component={Screen1} options={{ headerShown: false }} />

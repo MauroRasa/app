@@ -3,6 +3,7 @@ import { View, Dimensions } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { setCurrentComponent } from './navigationUtils';
 
 function Componente1() {
   const navigation = useNavigation();
@@ -14,8 +15,10 @@ function Componente1() {
     const relativeY = event.nativeEvent.translationY - 100; // 100 es la posición vertical del cuadrado
 
     if (relativeY < -50 && event.nativeEvent.velocityY < 0) {
+      setCurrentComponent('Componente2');
       navigation.navigate('Componente2');
     } else if (relativeY > 50 && event.nativeEvent.velocityY > 0) {
+      navigation.navigate('Componente3');
       navigation.navigate('Componente3'); // Cambia a Screen2 en el deslizamiento hacia abajo
     }
   }

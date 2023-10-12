@@ -3,6 +3,7 @@ import { View, Dimensions} from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { setCurrentComponent } from './navigationUtils';
 
 function Componente2() {
   const navigation = useNavigation();
@@ -15,8 +16,10 @@ function Componente2() {
 
     if (relativeY > 50 && event.nativeEvent.velocityY > 0) {
       navigation.navigate('Componente1');
+      setCurrentComponent('Componente1');
     } else if (relativeY < -50 && event.nativeEvent.velocityY < 0) {
       navigation.navigate('Componente3');
+      setCurrentComponent('Componente3');
     }
   }
 
