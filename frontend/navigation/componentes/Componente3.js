@@ -4,28 +4,28 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
-function Screen1() {
+function Componente3() {
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
   const iconSize = windowHeight * 0.08;
 
   function handleSwipeGesture(event) {
-    // Obtén la posición Y relativa al cuadrado
+    // Detecta si el usuario ha deslizado hacia arriba o hacia abajo y navega a la pantalla correspondiente
     const relativeY = event.nativeEvent.translationY - 100; // 100 es la posición vertical del cuadrado
 
-    if (relativeY < -50 && event.nativeEvent.velocityY < 0) {
-      navigation.navigate('Screen2');
-    } else if (relativeY > 50 && event.nativeEvent.velocityY > 0) {
-      navigation.navigate('Screen3'); // Cambia a Screen2 en el deslizamiento hacia abajo
+    if (relativeY > 50 && event.nativeEvent.velocityY > 0) {
+      navigation.navigate('Componente2');
+    } else if (relativeY < -50 && event.nativeEvent.velocityY < 0) {
+      navigation.navigate('Componente1');
     }
   }
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ width: 60, height: 60, backgroundColor: 'lightblue' }}>
+      <View style={{ width: 60, height: 60, backgroundColor: 'lightblue'}}>
         <PanGestureHandler onGestureEvent={handleSwipeGesture}>
           <View style={{ flex: 1 }}>
-            <Icon name="favorite" size={iconSize} color="white" />
+            <Icon name="sort" size={iconSize} color="white" />
           </View>
         </PanGestureHandler>
       </View>
@@ -33,4 +33,4 @@ function Screen1() {
   );
 }
 
-export default Screen1;
+export default Componente3;

@@ -4,7 +4,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
-function Screen2() {
+function Componente2() {
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
   const iconSize = windowHeight * 0.08;
@@ -14,9 +14,9 @@ function Screen2() {
     const relativeY = event.nativeEvent.translationY - 100; // 100 es la posición vertical del cuadrado
 
     if (relativeY > 50 && event.nativeEvent.velocityY > 0) {
-      navigation.navigate('Screen1');
+      navigation.navigate('Componente1');
     } else if (relativeY < -50 && event.nativeEvent.velocityY < 0) {
-      navigation.navigate('Screen3');
+      navigation.navigate('Componente3');
     }
   }
 
@@ -33,4 +33,4 @@ function Screen2() {
   );
 }
 
-export default Screen2;
+export default Componente2;
