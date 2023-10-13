@@ -9,7 +9,7 @@ import { setCurrentComponent } from './navigationUtils';
 function Componente3() {
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
-  const iconSize = windowHeight * 0.08;
+  const iconSize = windowHeight * 0.036;
 
   function handleSwipeGesture(event) {
     // Detecta si el usuario ha deslizado hacia arriba o hacia abajo y navega a la pantalla correspondiente
@@ -26,10 +26,10 @@ function Componente3() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ width: 60, height: 60, backgroundColor: 'lightblue'}}>
+      <View style={{width: 30, height: 30, backgroundColor: 'white', alignItems: 'center'}}>
         <PanGestureHandler onGestureEvent={handleSwipeGesture}>
-          <View style={{ flex: 1 }}>
-            <Icon name="sort" size={iconSize} color="white" />
+          <View style={{ flex: 1, justifyContent: 'center', }}>
+            <Icon name="sort" size={iconSize} color="gray" />
           </View>
         </PanGestureHandler>
       </View>

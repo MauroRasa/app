@@ -8,7 +8,7 @@ import { setCurrentComponent } from './navigationUtils';
 function Componente1() {
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
-  const iconSize = windowHeight * 0.08;
+  const iconSize = windowHeight * 0.036;
 
   function handleSwipeGesture(event) {
     // Obtén la posición Y relativa al cuadrado
@@ -25,10 +25,10 @@ function Componente1() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ width: 60, height: 60, backgroundColor: 'lightblue' }}>
+      <View style={{ width: 30, height: 30, backgroundColor: 'white', alignItems: 'center' }}>
         <PanGestureHandler onGestureEvent={handleSwipeGesture}>
-          <View style={{ flex: 1 }}>
-            <Icon name="favorite" size={iconSize} color="white" />
+          <View style={{ flex: 1}}>
+            <Icon name="restaurant" size={iconSize} color="gray" />
           </View>
         </PanGestureHandler>
       </View>

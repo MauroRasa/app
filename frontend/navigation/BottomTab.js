@@ -10,6 +10,7 @@ import Componente3 from './componentes/Componente3';
 import Screen1 from './screens/Screen1';
 import Screen2 from './screens/Screen2';
 import Screen3 from './screens/Screen3';
+import Tempo from './screens/Temporizador';
 import { getCurrentComponent } from './componentes/navigationUtils';
 
 
@@ -22,13 +23,13 @@ export const BottomTab = () => {
     const [currentComponent, setCurrentComponent] = useState(getCurrentComponent());
 
 
-    function logCurrentComponent() {
-        const currentComponent = getCurrentComponent();
-        console.log(`Estás en el componente: ${currentComponent}`);
-    }
+    // function logCurrentComponent() {
+    //     const currentComponent = getCurrentComponent();
+    //     console.log(`Estás en el componente: ${currentComponent}`);
+    // }
     
-    logCurrentComponent();
-    const interval = setInterval(logCurrentComponent, 5000);
+    // logCurrentComponent();
+    // const interval = setInterval(logCurrentComponent, 5000);
 
 
     let componentToRender;
@@ -53,7 +54,7 @@ export const BottomTab = () => {
         return () => { 
         };
     }, []);
-    
+
     return (
         <Tab.Navigator
             screenOptions = { ({ route }) => ({
@@ -65,11 +66,14 @@ export const BottomTab = () => {
 
                     let iconName = '';
                     switch ( route.name ) {
-                        case 'Home':
+                        case 'Home': 
                             iconName = focused ? 'home' : 'home-outline';
                             break;
                         case 'Profile':
                             iconName = focused ? 'person-circle' : 'person-circle-outline';
+                            break;
+                        case 'Tempo':
+                            iconName = focused ? 'timer' : 'timer-outline';
                             break;
                     }
                     if (route.name === 'Componente1') {
@@ -84,8 +88,9 @@ export const BottomTab = () => {
                 }
             })} 
         >
-            <Tab.Screen name = 'Home' component = { HomeScreen } />
-            <Tab.Screen name = 'Profile' component = { ProfileScreen } />
+            <Tab.Screen name = 'Home' component = { HomeScreen } options={{ headerShown: false }} />
+            <Tab.Screen name = 'Profile' component = { ProfileScreen } options={{ headerShown: false }} />
+            <Tab.Screen name = 'Tempo' component = { Tempo } options={{ headerShown: false }} />
             <Tab.Screen name = 'Componente1' options={{ headerShown: false }}>
                 {() => (
                 <Stack.Navigator>
