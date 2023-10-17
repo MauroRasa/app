@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import CircleComponent from '../componentes/Circle.js';
-import * as Animatable from 'react-native-animatable';
-import Modal from '../componentes/ModalRegistro.js'
-import ModalLogin from '../componentes/ModalLogin.js'
+import CircleComponent from './componentes/Circle';
+import Modal from './componentes/ModalRegistro'
+import ModalLogin from './componentes/ModalLogin'
 
 function Inicio() {
     const [isModalVisible, setIsModalVisible] = useState(false);

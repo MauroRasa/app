@@ -4,15 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Input, Icon } from 'react-native-elements';
 import * as Font from 'expo-font';
 
-const CustomModal = ({ isVisible, closeModal }) => {
+const ModalRegistro = ({ isVisible, closeModal }) => {
     
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [Pass, setPass] = useState('');
+    const [showPass, setShowPass] = useState(false);
 
     useEffect(() => {
         async function loadFont() {
           await Font.loadAsync({
-            'Plaster-Regular': require('../assets/plaster/Plaster-Regular.ttf'),
+            'Plaster-Regular': require('../../assets/plaster/Plaster-Regular.ttf'),
           });
           setFontLoaded(true); // Marcar la fuente como cargada cuando se completa la carga
         }
@@ -27,11 +27,12 @@ const CustomModal = ({ isVisible, closeModal }) => {
     
     const navigation = useNavigation();
     const [usuario, setUsuario] = useState('');
+    const [email, setEmail] = useState('');
 
     const [fontLoaded, setFontLoaded] = useState(false);
          
     const handleEnviarGet = () => {
-        fetch('http://192.168.100.219:3000/api/usuariosprincipal', {
+        fetch('http://192.168.100.219:3000/api/usuarios', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,15 +54,16 @@ const CustomModal = ({ isVisible, closeModal }) => {
     };
         
     const handleEnviar = () => {
-        if (!usuario || !password) {
+        if (!usuario || !email || !Pass) {
             Alert.alert('Campos Obligatorios', 'Todos los campos son obligatorios');
                 return;}
                     const datos = {
                         usuario: usuario,
-                        password: password
+                        email: email,
+                        Pass: Pass
                     };
             
-                fetch('http://192.168.100.219:3000/api/usuariosprincipal', {
+                fetch('http://192.168.100.219:3000/api/usuarios', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -104,7 +106,7 @@ const CustomModal = ({ isVisible, closeModal }) => {
           <View style={[styles.modalContainer, {left: anchoUsario, top: alturaUsuario}]}>
             <View style={styles.formulario}>
                     {fontLoaded ? (
-                        <Text style={[{fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', top: 20, }]}>Iniciar Sesión</Text>
+                        <Text style={[{fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', top: 20, }]}>Registro</Text>
                     ) : (<Text>Loading...</Text>
                     )}
                     <Input
@@ -114,22 +116,29 @@ const CustomModal = ({ isVisible, closeModal }) => {
                         
                         onChangeText={text => setUsuario(text)}
                     />
+                    <Input
+                        placeholder="Email"
+                        value={email}
+                        style={styles.input}
+        
+                        onChangeText={text => setEmail(text)}
+                    />
                         <Input
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={(text) => setPassword(text)}
-                        secureTextEntry={!showPassword}
+                        placeholder="Pass"
+                        value={Pass}
+                        onChangeText={(text) => setPass(text)}
+                        secureTextEntry={!showPass}
                         rightIcon={
                         <Icon
-                            name={showPassword ? 'visibility' : 'visibility-off'}
+                            name={showPass ? 'visibility' : 'visibility-off'}
                             size={24}
-                            onPress={() => setShowPassword(!showPassword)}
+                            onPress={() => setShowPass(!showPass)}
                         />
                         }
                     />
                     <View style={{borderRadius: 10, backgroundColor: 'blue', width: '70%', height: '12%', justifyContent: 'center', alignItems: 'center', top: '20%'}}>
                         <TouchableOpacity onPress={handleEnviar}>
-                            <Text style={{ color: 'white', fontSize: 32, fontWeight: 'bold'}}> Iniciar </Text>
+                            <Text style={{ color: 'white', fontSize: 32, fontWeight: 'bold'}}> Registrarse </Text>
                             </TouchableOpacity>
                     </View>
                 </View>
@@ -174,4 +183,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomModal;
+export default ModalRegistro;

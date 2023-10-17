@@ -4,7 +4,7 @@ import * as Font from 'expo-font';
 
 const loadCustomFont = async () => {
   await Font.loadAsync({
-    'Plaster-Regular': require('../assets/plaster/Plaster-Regular.ttf'),
+    'Plaster-Regular': require('../../assets/plaster/Plaster-Regular.ttf'),
   });
 };
 

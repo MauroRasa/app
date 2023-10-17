@@ -1,59 +1,44 @@
 import { createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
-import { View} from 'react-native';
+import { View, SafeAreaView, Text} from 'react-native';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import Componente1 from './componentes/Componente1';
-import Componente2 from './componentes/Componente2';
-import Componente3 from './componentes/Componente3';
+import NavegadorScreens from './componentes/NavegadorScreens';
 import Screen1 from './screens/Screen1';
 import Screen2 from './screens/Screen2';
 import Screen3 from './screens/Screen3';
-import Tempo from './screens/Temporizador';
-import { getCurrentComponent } from './componentes/navigationUtils';
+import Cronometro from './screens/temporizador/Cronometro';
+import Temporizador from './screens/temporizador/Temporizador';
+import TemporizadorAjustable from './screens/temporizador/TemporizadorAjustable';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+// CREAR NAVEGADORES
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const StackTemporizador = createStackNavigator();
+// FIN
 
 export const BottomTab = () => {
-    const [currentComponent, setCurrentComponent] = useState(getCurrentComponent());
-
-
-    // function logCurrentComponent() {
-    //     const currentComponent = getCurrentComponent();
-    //     console.log(`Estás en el componente: ${currentComponent}`);
-    // }
-    
-    // logCurrentComponent();
-    // const interval = setInterval(logCurrentComponent, 5000);
-
-
-    let componentToRender;
-
-    if (currentComponent === 'Componente1') {
-        componentToRender = <Componente1 />;
-    } else if (currentComponent === 'Componente2') {
-        componentToRender = <Componente2 />;
-    } else if (currentComponent === 'Componente3') {
-        componentToRender = <Componente3 />;
-    } else {
-        componentToRender = <p>Componente no encontrado</p>;
-    }
-
-    useEffect(() => {
-        const updateComponent = () => {
-        setCurrentComponent(getCurrentComponent());
+    // TRANSICION ENTRE LAS SCREENS DEL BOTON NAVEGADORSCREENS
+    const verticalCardStyleInterpolator = ({ current, layouts }) => {
+        return {
+          cardStyle: {
+            transform: [
+              {
+                translateY: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.height, 0],
+                }),
+              },
+            ],
+          },
         };
-
-        updateComponent();
-
-        return () => { 
-        };
-    }, []);
+      };
+    // FIN
 
     return (
         <Tab.Navigator
@@ -62,8 +47,15 @@ export const BottomTab = () => {
                 // tabBarActiveBackgroundColor: 'grey',
                 // tabBarInactiveBackgroundColor: 'orange',
                 showLabel: false, // Ocultar etiquetas
+                tabBarStyle: {
+                    display: route.name === 'TemporizadorConjunto' ? 'none' : 'flex', // Oculta la tabBar si la ruta es 'Tempo'
+                    height: route.name === 'TemporizadorConjunto' ? 0 : 55, // Ajusta la altura de la tabBar según la ruta
+                    transition: 'height 0.3s', // Agrega una transición suave de 0.3 segundos
+                  },
+                  tabBarHideOnKeyboard: true,
                 tabBarIcon: ({ focused, color, size }) => {
 
+                    // ICONOS NORMALES
                     let iconName = '';
                     switch ( route.name ) {
                         case 'Home': 
@@ -72,32 +64,52 @@ export const BottomTab = () => {
                         case 'Profile':
                             iconName = focused ? 'person-circle' : 'person-circle-outline';
                             break;
-                        case 'Tempo':
+                        case 'TemporizadorConjunto':
                             iconName = focused ? 'timer' : 'timer-outline';
                             break;
                     }
-                    if (route.name === 'Componente1') {
-                        return (
-                          <View style={{ flex: 1 }}>
-                            {componentToRender} 
-                          </View>
-                        );
+                    // FIN
+                    // ICONO PARA NAVEGAR ENTRE SCREENS
+                    if (route.name === 'NavegadorScreens') {
+                        return <View style={{ flex: 1 }}><NavegadorScreens/></View>;
                     }
+                    // FIN
 
+                    // ASIGNAR VALORES A LOS ICONOS NORMALES
                     return <Icon name = { iconName } size = { size } color = { color } />
                 }
             })} 
+            animationEnabled={true}
         >
+            {/* NAVEGACION */}
             <Tab.Screen name = 'Home' component = { HomeScreen } options={{ headerShown: false }} />
             <Tab.Screen name = 'Profile' component = { ProfileScreen } options={{ headerShown: false }} />
-            <Tab.Screen name = 'Tempo' component = { Tempo } options={{ headerShown: false }} />
-            <Tab.Screen name = 'Componente1' options={{ headerShown: false }}>
+            <Tab.Screen name = "TemporizadorConjunto" options={{ headerShown: false }}>
                 {() => (
-                <Stack.Navigator>
-                    <Stack.Screen name="Componente1" component={Screen1} options={{ headerShown: false }} />
-                    <Stack.Screen name="Componente2" component={Screen2} options={{ headerShown: false }} />
-                    <Stack.Screen name="Componente3" component={Screen3} options={{ headerShown: false }} />
-                </Stack.Navigator>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <StackTemporizador.Navigator initialRouteName="Temporizador">
+                            <StackTemporizador.Screen name="Cronometro" component={Cronometro} options={{ headerShown: false }} />
+                            <StackTemporizador.Screen name="Temporizador" component={Temporizador} options={{ headerShown: false }} />
+                            <StackTemporizador.Screen name="TemporizadorAjustable" component={TemporizadorAjustable} options={{ headerShown: false }} />
+                        </StackTemporizador.Navigator>
+                    </SafeAreaView>
+                </GestureHandlerRootView> 
+                )}
+            </Tab.Screen>
+            <Tab.Screen name = 'NavegadorScreens' options={{ headerShown: false }}>
+                {() => (
+                <SafeAreaView style={{ flex: 1 }}>
+                    <Stack.Navigator initialRouteName="Screen1" 
+                        screenOptions={{
+                            headerShown: false,
+                            cardStyleInterpolator: verticalCardStyleInterpolator,
+                        }}>
+                        <Stack.Screen name="Screen1" component={Screen1}/>
+                        <Stack.Screen name="Screen2" component={Screen2}/>
+                        <Stack.Screen name="Screen3" component={Screen3}/>
+                    </Stack.Navigator>
+                </SafeAreaView>
             )}
             
             </Tab.Screen>
