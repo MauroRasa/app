@@ -26,6 +26,7 @@
     "expo": "~49.0.13",
     "expo-av": "~13.4.1",
     "expo-font": "~11.4.0",
+    "expo-image-picker": "~14.3.2",
     "expo-linear-gradient": "~12.3.0",
     "expo-notifications": "~0.20.1",
     "expo-permissions": "~14.2.1",
@@ -51,9 +52,9 @@
     "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^10.0.0",
     "react-native-web": "~0.19.6",
+    "react-native-youtube": "^2.0.2",
     "react-navigation": "^5.0.0",
-    "react-timer-hook": "^3.0.7",
-    "expo-image-picker": "~14.3.2"
+    "react-timer-hook": "^3.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
