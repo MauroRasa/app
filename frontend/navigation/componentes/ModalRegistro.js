@@ -32,7 +32,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
     const [fontLoaded, setFontLoaded] = useState(false);
          
     const handleEnviarGet = () => {
-        fetch('http://192.168.100.219:3000/api/usuarios', {
+        fetch('http://192.168.43.67:3000/api/usuarios', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
                         Pass: Pass
                     };
             
-                fetch('http://192.168.100.219:3000/api/usuarios', {
+                fetch('http://192.168.43.67:3000/api/usuarios', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
