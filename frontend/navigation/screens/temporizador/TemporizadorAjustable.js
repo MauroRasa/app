@@ -17,14 +17,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Audio } from 'expo-av';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BackHandler } from 'react-native';
+import { useBackHandler } from '@react-native-community/hooks';
 
 
-function Timer({ expiryTimestamp }) {
+function Timer({ expiryTimestamp, selectedMinutes, selectedSeconds }) {
 
 
 // ALARMA CUANDO TERMINA EL TEMPORIZADOR
 
   const [sound, setSound] = useState();
+
+  const tiempoUser = selectedMinutes * 60 + selectedSeconds;
 
   useEffect(() => {
     return sound
@@ -101,7 +105,7 @@ function Timer({ expiryTimestamp }) {
         onPress={() => {
           // Restarts to user-selected minutes and seconds
           const time = new Date();
-          time.setSeconds(time.getSeconds() + 3);
+          time.setSeconds(time.getSeconds() + 0);
           restart(time, false);
         }}
         style={{
@@ -111,7 +115,7 @@ function Timer({ expiryTimestamp }) {
         }}
       >
         <Text style={{ backgroundColor: 'blue', padding: 20, borderRadius: 100, textAlign: 'center', justifyContent: 'center',}}>
-          Restart
+          Finalizar Temporizador
         </Text>
       </TouchableOpacity>
     </ImageBackground>
@@ -130,14 +134,26 @@ const styles = StyleSheet.create({
 
 export default function TemporizadorAjustable({navigation}) {
 
-  const [timers, setTimers] = useState([{ id: 1, name: 'Temporizador 1', initialDuration: 60 }]);
-  const [newTimerId, setNewTimerId] = useState(2); // Iniciar en 2 ya que el temporizador 1 ya existe
+  const [timers, setTimers] = useState([]);
+  const [newTimerId, setNewTimerId] = useState(1); // Iniciar en 2 ya que el temporizador 1 ya existe
 
   const Tab = createMaterialTopTabNavigator();
 
   const windowHeight = Dimensions.get('window').height;
   const iconSize = windowHeight * 0.05;
 
+  const storageKey = 'timersFromTemporizadorAjustable'; // Clave única para identificar los temporizadores de esta pantalla
+
+  const [selectedMinutes, setSelectedMinutes] = useState(0);
+  const [selectedSeconds, setSelectedSeconds] = useState(0);
+
+  useBackHandler(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'AppPrincipal' }], 
+    });
+    return true; 
+  });
 
   const handleGesture = ({ nativeEvent }) => {
     if (nativeEvent.translationY < -80) {
@@ -149,15 +165,9 @@ export default function TemporizadorAjustable({navigation}) {
     }
   };
 
-
-
   useEffect(() => {
     loadTimersFromStorage(); // Carga los temporizadores desde AsyncStorage al inicio
   }, []);
-
-
-  const storageKey = 'timersFromTemporizadorAjustable'; // Clave única para identificar los temporizadores de esta pantalla
-
 
   const saveTimersToStorage = async (timers) => {
     try {
@@ -171,7 +181,12 @@ export default function TemporizadorAjustable({navigation}) {
     try {
       const storedTimers = await AsyncStorage.getItem(storageKey);
       if (storedTimers) {
-        setTimers(JSON.parse(storedTimers));
+        const parsedTimers = JSON.parse(storedTimers);
+        setTimers(parsedTimers);
+        if (parsedTimers.length > 0) {
+          const maxId = Math.max(...parsedTimers.map((timer) => timer.id));
+          setNewTimerId(maxId + 1); // Establecer el nuevo ID en función del temporizador con el ID más alto
+        }
       }
     } catch (error) {
       console.error('Error al cargar desde AsyncStorage:', error);
@@ -188,8 +203,6 @@ export default function TemporizadorAjustable({navigation}) {
   
   const AddTimerScreen = () => {
     const [name, setName] = useState('');
-    const [selectedMinutes, setSelectedMinutes] = useState(0);
-    const [selectedSeconds, setSelectedSeconds] = useState(0);
   
     const handleNameChange = (text) => {
       setName(text);
@@ -228,7 +241,7 @@ export default function TemporizadorAjustable({navigation}) {
             placeholder="Ingrese el nombre del temporizador"
           />
           <TouchableOpacity onPress={addTimer}>
-            <Text style={{color: 'white'}}>Agregar Temporizador</Text>
+            <Text style={{color: 'white', backgroundColor: 'gray', fontWeight:'bold', fontSize: 18, borderRadius: 50, width: 150, textAlign:'center'}}>Agregar Temporizador</Text>
           </TouchableOpacity>
           <View>
             <Text style={{ color: 'white' }}>Seleccionar minutos:</Text>
@@ -259,13 +272,13 @@ export default function TemporizadorAjustable({navigation}) {
 
 
 
-  const TimerWithRemove = ({ id, initialDuration }) => {  
+  const TimerWithRemove = ({ id, initialDuration, selectedMinutes, selectedSeconds }) => {  
     const time = new Date();
     time.setSeconds(time.getSeconds() + initialDuration);
 
     return (
      <View style={styles.timerContainer}>
-      <Timer expiryTimestamp={time} />
+      <Timer expiryTimestamp={time} selectedMinutes={selectedMinutes} selectedSeconds={selectedSeconds} />
       <TouchableOpacity style={styles.deleteButton} onPress={() => removeTimer(id)}>
         <Text style={styles.deleteText}>
           <Icon name="delete" size={iconSize} color="gray" />
@@ -295,7 +308,10 @@ export default function TemporizadorAjustable({navigation}) {
 
 
   return (
-  <PanGestureHandler onGestureEvent={handleGesture}>
+  <PanGestureHandler 
+  onGestureEvent={handleGesture}
+  activeOffsetY={[-10, 10]}
+  >
     <SafeAreaView style={{ flex: 1}}>
       <Tab.Navigator
         screenOptions={{
@@ -316,7 +332,13 @@ export default function TemporizadorAjustable({navigation}) {
           key={timer.id}
           name={timer.name}
         >
-          {() => <TimerWithRemove id={timer.id} initialDuration={timer.initialDuration} />}
+          {() => 
+          <TimerWithRemove 
+            id={timer.id} 
+            initialDuration={timer.initialDuration}
+            selectedMinutes={selectedMinutes}
+            selectedSeconds={selectedSeconds} 
+            />}
         </Tab.Screen>
         ))}
         <Tab.Screen name="Agregar" component={AddTimerScreen} />

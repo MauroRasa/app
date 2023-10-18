@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { View, Dimensions, Platform } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 function Componente1() {
@@ -81,7 +81,7 @@ function Componente1() {
       <View style={{ width: 30, height: 30, backgroundColor: 'white', alignItems: 'center' }}>
         <PanGestureHandler onGestureEvent={handleSwipeGesture} shouldCancelWhenOutside={false} activeOffsetY={[-5, 5]}>
           <View style={{ flex: 1}}>
-            <Icon name= {Ventana1 ? "settings" : (Ventana2 ? "restaurant" : "sort")}  size={iconSize} color="gray" />
+            <Icon name= {Ventana1 ? "barbell" : (Ventana2 ? "restaurant" : "caret-back-circle-outline")}  size={iconSize} color="gray" />
           </View>
         </PanGestureHandler>
       </View>

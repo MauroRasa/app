@@ -1,54 +1,157 @@
-import React, {useRef, useState} from 'react';
+import React, {setStatus, useEffect} from 'react';
 import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import {Video} from 'expo-av';
+import { StatusBar } from 'expo-status-bar';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Pecho = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
 
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido del Biceps aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/abdominales.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };
 
 const Biceps = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
+
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido del Biceps aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/doctor.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };
 
 const Piernas = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
+
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido de Piernas aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/bebe.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };
 
 const Hombros = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
+
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido de Hombros aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/cinta.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };
 
 const Espalda = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
+
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido de Espalda aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/espalda.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };
 
 const Triceps = () => {
+    const video = React.useRef(null);
+
+    useEffect(() => {
+        (async () => {
+          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
+        })();
+      }, []);
+
     return (
-        <View style={styles.tabItem}>
-            {/* Agrega el reproductor de video para el contenido de Triceps aquí */}
+        <View style={styles.container}>
+            <Video
+                ref={video}
+                style={styles.video}
+                source={require('../../assets/triceps.mp4')}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+            />
+            <StatusBar style="auto" />
         </View>
     );
 };

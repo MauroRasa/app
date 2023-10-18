@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet, Dimensions, LogBox  } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
-LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+LogBox.ignoreLogs(['new NativeEventEmitter']); 
 
 
 const Screen1 = ({navigation}) => {
@@ -68,7 +68,7 @@ const Screen1 = ({navigation}) => {
     
         const subscription = Dimensions.addEventListener('change', onChange);
     
-        return () => subscription && subscription.remove(); // check if subscription is truthy before trying to remove it
+        return () => subscription && subscription.remove(); 
     }, []);
 
 
@@ -110,11 +110,7 @@ const Screen1 = ({navigation}) => {
         headSec: {
             height: 50, 
             backgroundColor: 'lightyellow' 
-        },
-        text: {
-            margin: 6,
-            textAlign: 'center',
-        },
+        }
     });
 
     return (
@@ -123,15 +119,14 @@ const Screen1 = ({navigation}) => {
             <View style={styles.tableContainer}>
               <ScrollView>
                 <Table style={styles.table} borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
-                  <Row data={tableHead} style={styles.head} textStyle={styles.text} />
+                  <Row data={tableHead} style={styles.head} />
                   <Row 
                     data={tableHeadSec} 
                     style={styles.headSec} 
-                    textStyle={styles.text} 
                     flexArr={[0.4, 0.7, 2, 0.5, 0.5]} />
                   <Rows
                         data={tableData}
-                        flexArr={[0.4, 0.7, 2, 0.5, 0.5]} // Ajusta los valores aquí según el ancho deseado para cada columna
+                        flexArr={[0.4, 0.7, 2, 0.5, 0.5]} 
                         style= {styles.table}
                     />
                 </Table>

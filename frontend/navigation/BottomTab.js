@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import { View, SafeAreaView, Text} from 'react-native';
 import HomeScreen from './screens/HomeScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import ChatFPG from './screens/ChatFPG';
 import NavegadorScreens from './componentes/NavegadorScreens';
 import Screen1 from './screens/Screen1';
 import Screen2 from './screens/Screen2';
@@ -39,6 +39,7 @@ export const BottomTab = () => {
         };
       };
     // FIN
+    
 
     return (
         <Tab.Navigator
@@ -61,17 +62,23 @@ export const BottomTab = () => {
                         case 'Home': 
                             iconName = focused ? 'home' : 'home-outline';
                             break;
-                        case 'Profile':
-                            iconName = focused ? 'person-circle' : 'person-circle-outline';
+                        case 'ChatFPG':
+                            iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
                             break;
                         case 'TemporizadorConjunto':
                             iconName = focused ? 'timer' : 'timer-outline';
                             break;
-                    }
-                    // FIN
-                    // ICONO PARA NAVEGAR ENTRE SCREENS
-                    if (route.name === 'NavegadorScreens') {
-                        return <View style={{ flex: 1 }}><NavegadorScreens/></View>;
+                        case 'NavegadorScreens':
+                            if (focused) {
+                                return (
+                                  <View style={{ flex: 1 }}>
+                                    <NavegadorScreens />
+                                  </View>
+                                );
+                              } else {
+                                iconName = 'barbell-outline';
+                              }
+                        break;
                     }
                     // FIN
 
@@ -83,7 +90,7 @@ export const BottomTab = () => {
         >
             {/* NAVEGACION */}
             <Tab.Screen name = 'Home' component = { HomeScreen } options={{ headerShown: false }} />
-            <Tab.Screen name = 'Profile' component = { ProfileScreen } options={{ headerShown: false }} />
+            <Tab.Screen name = 'ChatFPG' component = { ChatFPG } options={{ headerShown: false }} />
             <Tab.Screen name = "TemporizadorConjunto" options={{ headerShown: false }}>
                 {() => (
                 <GestureHandlerRootView style={{ flex: 1 }}>

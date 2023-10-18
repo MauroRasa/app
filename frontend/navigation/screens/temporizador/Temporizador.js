@@ -17,6 +17,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { BackHandler } from 'react-native';
+import { useBackHandler } from '@react-native-community/hooks';
+
 
 
 function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
@@ -73,7 +76,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
         >
-          <Text style={{fontSize: 30}}>{isFirstTimerVisible ? 'Rutina en curso...' : 'Descanso!'}</Text>
+          <Text style={{fontSize: 30, textAlign: 'center'}}>{isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Aprete el circulo para iniciar'): 'Descanso!'}</Text>
           <Text style={{fontSize: 50}}>{`${minutes}:${seconds}`}</Text>
         </TouchableOpacity>
       </View>
@@ -81,7 +84,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
       <TouchableOpacity 
         onPress={() => {
           const time = new Date();
-          time.setSeconds(time.getSeconds() + 3);
+          time.setSeconds(time.getSeconds() + 0);
           restart(time, false);
         }}
         style={{
@@ -91,7 +94,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
         }}
       >
         <Text style={{ backgroundColor: 'blue', padding: 20, borderRadius: 100, textAlign: 'center', justifyContent: 'center',}}>
-          Restart
+          Finalizar Temporizador
         </Text>
       </TouchableOpacity>
     </ImageBackground>
@@ -121,6 +124,15 @@ export default function Temporizador({navigation, route }) {
 
   const [stopTime, setStopTime] = useState(null);
   const storageKey = 'timersFromTemporizador';
+
+  useBackHandler(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'AppPrincipal' }], 
+    });
+    return true; 
+  });
+
 
   useEffect(() => {
     if (route.params && route.params.stopTime) {
@@ -186,15 +198,12 @@ const handleGesture = ({ nativeEvent }) => {
       if (storedTimers) {
         const parsedTimers = JSON.parse(storedTimers);
         setTimers(parsedTimers);
-        parsedTimers.forEach((timer, index) => {
-          if (timer.initialDuration) {
-            const duration = timer.initialDuration; // Utiliza la duración específica del temporizador desde AsyncStorage
-            const updatedTimers = timers.map((t) =>
-              t.id === timer.id ? { ...t, duration: duration } : t
-            );
-            setTimers(updatedTimers);
-          }
-        });
+        if (parsedTimers.length > 0) {
+          const maxId = Math.max(...parsedTimers.map((timer) => timer.id));
+          setNewTimerId(maxId + 1); // Establecer el nuevo ID en función del temporizador con el ID más alto
+          const firstTimer = parsedTimers[0];
+          setStopTime(firstTimer.initialDuration); // Actualizar stopTime con el valor del primer temporizador
+        }
       }
     } catch (error) {
       console.error('Error al cargar desde AsyncStorage:', error);
@@ -232,24 +241,16 @@ const AddTimerScreen = () => {
     setName(text);
   };
 
-  const [globalStopTime, setGlobalStopTime] = useState('');
-
-  const addTimer = async () => {
-    try {
-      const newName = name ? name : `Temporizador ${newTimerId}`;
-      setGlobalStopTime(stopTime);
-      const updatedTimers = [
-        ...timers,
-        { id: newTimerId, name: newName, initialDuration: globalStopTime },
-      ];
-      setTimers(updatedTimers);
-      await saveTimersToStorage(updatedTimers);
-      setGlobalStopTime(stopTime);
-      setName('');
-      setNewTimerId(newTimerId + 1);
-    } catch (error) {
-      console.error('Error al agregar el temporizador:', error);
-    }
+  const addTimer = () => {
+    const newName = name ? name : `Temporizador ${newTimerId}`;
+    const updatedTimers = [
+      ...timers,
+      { id: newTimerId, name: newName, initialDuration: stopTime },
+    ];
+    setTimers(updatedTimers);
+    saveTimersToStorage(updatedTimers); // Guarda los temporizadores en AsyncStorage
+    setName('');
+    setNewTimerId(newTimerId + 1); // Incrementa newTimerId para el siguiente temporizador
   };
 
     return (
@@ -374,7 +375,10 @@ const handleSecondTimerExpire = () => {
 
 // MOSTRAR TEMPORIZADOR
   return (
-  <PanGestureHandler onGestureEvent={handleGesture}>
+  <PanGestureHandler
+  onGestureEvent={handleGesture}
+  activeOffsetY={[-10, 10]}
+  >
     <SafeAreaView style={{ flex: 1}}>
       <Tab.Navigator
         screenOptions={{
@@ -397,7 +401,7 @@ const handleSecondTimerExpire = () => {
                   <TimerWithRemove id={timer.id} style={{}}/>
                   {isFirstTimerVisible && (
                     <Timer
-                    duration={stopTime !== null ? stopTime : 2} 
+                    duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
                     onExpire={handleFirstTimerExpire}
                     autoStart={false}
                     isFirstTimerVisible={isFirstTimerVisible}

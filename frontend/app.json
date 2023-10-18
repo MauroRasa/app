@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["NOTIFICATIONS"]
+      "permissions": ["INTERNET", "NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
