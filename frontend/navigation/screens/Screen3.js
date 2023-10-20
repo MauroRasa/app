@@ -1,4 +1,4 @@
-import React, {setStatus, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {Video} from 'expo-av';
@@ -20,11 +20,10 @@ const Pecho = () => {
             <Video
                 ref={video}
                 style={styles.video}
-                source={require('../../assets/abdominales.mp4')}
+                source={require('../../assets/pecho.mp4')}
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>
@@ -45,11 +44,10 @@ const Biceps = () => {
             <Video
                 ref={video}
                 style={styles.video}
-                source={require('../../assets/doctor.mp4')}
+                source={require('../../assets/biceps.mp4')}
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>
@@ -70,11 +68,10 @@ const Piernas = () => {
             <Video
                 ref={video}
                 style={styles.video}
-                source={require('../../assets/bebe.mp4')}
+                source={require('../../assets/piernas.mp4')}
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>
@@ -95,11 +92,10 @@ const Hombros = () => {
             <Video
                 ref={video}
                 style={styles.video}
-                source={require('../../assets/cinta.mp4')}
+                source={require('../../assets/hombros.mp4')}
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>
@@ -124,7 +120,6 @@ const Espalda = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>
@@ -149,7 +144,6 @@ const Triceps = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
-                onPlaybackStatusUpdate={setStatus}
             />
             <StatusBar style="auto" />
         </View>

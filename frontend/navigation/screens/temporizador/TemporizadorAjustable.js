@@ -21,45 +21,20 @@ import { BackHandler } from 'react-native';
 import { useBackHandler } from '@react-native-community/hooks';
 
 
-function Timer({ expiryTimestamp, selectedMinutes, selectedSeconds }) {
+function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
 
+  const expiryTimestamp = new Date();
+  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + duration);
 
-// ALARMA CUANDO TERMINA EL TEMPORIZADOR
-
-  const [sound, setSound] = useState();
-
-  const tiempoUser = selectedMinutes * 60 + selectedSeconds;
-
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
-
-  const playSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('./assets/Alarma.mp3'));
-    setSound(sound);
-
-    await sound.playAsync();
-  };
-
-
-
-    
   const {
-    totalSeconds,
     seconds,
     minutes,
-    hours,
-    days,
     isRunning,
     start,
     pause,
     resume,
     restart,
-  } = useTimer({ expiryTimestamp, autoStart: false, onExpire: () => playSound() });
+  } = useTimer({ expiryTimestamp, autoStart, onExpire});
 
 
   const [isPressed, setIsPressed] = useState(false);
@@ -76,7 +51,7 @@ function Timer({ expiryTimestamp, selectedMinutes, selectedSeconds }) {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#B22222',
+            backgroundColor: isFirstTimerVisible ? '#B22222' : 'yellow',
             borderRadius: 999,
             borderColor: 'gray', 
             borderWidth: 3,
@@ -96,8 +71,8 @@ function Timer({ expiryTimestamp, selectedMinutes, selectedSeconds }) {
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
         >
+          <Text style={{fontSize: 30, textAlign: 'center'}}>{isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Apretar el circulo para iniciar'): 'Descanso!'}</Text>
           <Text style={{fontSize: 50}}>{`${minutes}:${seconds}`}</Text>
-          <Text style={{fontSize: 30}}>{`Duración: ${totalSeconds} segundos`}</Text>
         </TouchableOpacity>
       </View>
   
@@ -231,39 +206,49 @@ export default function TemporizadorAjustable({navigation}) {
     return (
       <LinearGradient
         colors={['gray', 'black']}
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%'  }}>
-          <KeepKeyboardOpenTextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
-            onChangeText={handleNameChange}
-            value={name}
-            placeholder="Ingrese el nombre del temporizador"
-          />
-          <TouchableOpacity onPress={addTimer}>
-            <Text style={{color: 'white', backgroundColor: 'gray', fontWeight:'bold', fontSize: 18, borderRadius: 50, width: 150, textAlign:'center'}}>Agregar Temporizador</Text>
-          </TouchableOpacity>
-          <View>
-            <Text style={{ color: 'white' }}>Seleccionar minutos:</Text>
-            <Picker
-              selectedValue={selectedMinutes}
-              onValueChange={handleMinutesChange}
-            >
-              {Array.from({ length: 60 }, (_, i) => (
-                <Picker.Item key={i} label={i.toString()} value={i} />
-              ))}
-            </Picker>
-
-            <Text style={{ color: 'white' }}>Seleccionar segundos:</Text>
-            <Picker
-              selectedValue={selectedSeconds}
-              onValueChange={handleSecondsChange}
-            >
-              {Array.from({ length: 60 }, (_, i) => (
-                <Picker.Item key={i} label={i.toString()} value={i} />
-              ))}
-            </Picker>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', paddingTop: 50 }}>
+          <View style={{ flexDirection: 'row', marginTop: 20 }}>
+            <View style={{ marginRight: 50 }}>
+              <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 10 }}>Seleccionar minutos:</Text>
+              <Picker
+                selectedValue={selectedMinutes}
+                onValueChange={handleMinutesChange}
+                style={{ height: 50, width: 100, color: 'white' }}
+                itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
+              >
+                {Array.from({ length: 60 }, (_, i) => (
+                  <Picker.Item key={i} label={i.toString()} value={i} />
+                ))}
+              </Picker>
+            </View>
+            <View>
+              <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 10 }}>Seleccionar segundos:</Text>
+              <Picker
+                selectedValue={selectedSeconds}
+                onValueChange={handleSecondsChange}
+                style={{ height: 50, width: 100, color: 'white' }}
+                itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
+              >
+                {Array.from({ length: 60 }, (_, i) => (
+                  <Picker.Item key={i} label={i.toString()} value={i} />
+                ))}
+              </Picker>
+            </View>
           </View>
+          <View style={{ marginTop: 120, width: '100%', alignItems: 'center' }}>
+            <KeepKeyboardOpenTextInput
+              style={{ height: 40, borderColor: 'white', borderWidth: 1, color: 'white', paddingHorizontal: 10, width: '100%', textAlign: 'center' }}
+              onChangeText={handleNameChange}
+              value={name}
+              placeholder="Ingrese el nombre del temporizador"
+              placeholderTextColor="white"
+            />
+          </View>
+          <TouchableOpacity onPress={addTimer} style={{ marginTop: 30 }}>
+            <Text style={{color: 'white', backgroundColor: 'gray', fontWeight:'bold', fontSize: 18, borderRadius: 50, width: 200, textAlign:'center', padding: 10 }}>Agregar Temporizador</Text>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
     );
@@ -272,13 +257,9 @@ export default function TemporizadorAjustable({navigation}) {
 
 
 
-  const TimerWithRemove = ({ id, initialDuration, selectedMinutes, selectedSeconds }) => {  
-    const time = new Date();
-    time.setSeconds(time.getSeconds() + initialDuration);
-
+  const TimerWithRemove = ({ id}) => {  
     return (
      <View style={styles.timerContainer}>
-      <Timer expiryTimestamp={time} selectedMinutes={selectedMinutes} selectedSeconds={selectedSeconds} />
       <TouchableOpacity style={styles.deleteButton} onPress={() => removeTimer(id)}>
         <Text style={styles.deleteText}>
           <Icon name="delete" size={iconSize} color="gray" />
@@ -289,21 +270,72 @@ export default function TemporizadorAjustable({navigation}) {
   };
   const styles = StyleSheet.create({
     timerContainer: {
-      position: 'relative',
+      top: '90%',
     },
     deleteButton: {
       position: 'absolute',
-      bottom: 20,
-      right: 20,
-      backgroundColor: 'rgba(255, 255, 255, 0)', 
-      elevation: 0 ,
-      padding: 10,
-      borderRadius: 5,
+      alignSelf: 'center',
+      zIndex:100
     },
     deleteText: {
       color: 'white',
     },
   });
+
+  // ALARMA CUANDO TERMINA EL TEMPORIZADOR
+const [sound, setSound] = useState();
+
+useEffect(() => {
+  return sound
+    ? () => {
+        sound.unloadAsync();
+      }
+    : undefined;
+}, [sound]);
+
+    // FIN DE TIEMPO DE ENTRENAMIENTO
+const playSound = async () => {
+  const { sound } = await Audio.Sound.createAsync(require('./assets/CambioTempo.mp3'));
+  setSound(sound);
+
+  await sound.playAsync();
+};
+    // FIN DEL DESCANSO
+const playDescansoSound = async () => {
+  const { sound } = await Audio.Sound.createAsync(require('./assets/Alarma.mp3'));
+  setSound(sound);
+
+  await sound.playAsync();
+};
+// FIN
+
+
+  // MOSTRAR TEMPORIZADOR DE ENTRENAMIENTO O DE DESCANSO
+const [isFirstTimerVisible, setIsFirstTimerVisible] = useState(true);
+const [isSecondTimerVisible, setIsSecondTimerVisible] = useState(false);
+
+const handleStartFirstTimer = () => {
+  setIsFirstTimerVisible(true);
+  setIsSecondTimerVisible(false); 
+};
+
+const handleFirstTimerExpire = () => {
+  playSound()
+  setIsFirstTimerVisible(false);
+  setIsSecondTimerVisible(true);
+};
+
+const handleStartSecondTimer = () => {
+  setIsSecondTimerVisible(true);
+  setIsFirstTimerVisible(false); 
+};
+
+const handleSecondTimerExpire = () => {
+  playDescansoSound()
+  setIsSecondTimerVisible(false);
+  setIsFirstTimerVisible(true);
+};
+// FIN
 
 
 
@@ -322,25 +354,36 @@ export default function TemporizadorAjustable({navigation}) {
           tabBarIndicatorStyle: { backgroundColor:'gray' },
           tabBarLabelStyle: {
             textShadowColor: 'rgba(0, 0, 0, 0.75)', // Agregar sombra al texto
-            textShadowOffset: { width: 0, height: 1 }, // Ajustar el desplazamiento de la sombra si es necesario
-            textShadowRadius: 2, // Ajustar el radio de la sombra si es necesario
+            textShadowOffset: { width: 0, height: 1 }, // desplazamiento de la sombra 
+            textShadowRadius: 2, // radio de la sombra 
             fontWeight: 'bold', // Hacer el texto en negrita
           },
         }}>
-        {timers.map((timer) => (
-          <Tab.Screen
-          key={timer.id}
-          name={timer.name}
-        >
-          {() => 
-          <TimerWithRemove 
-            id={timer.id} 
-            initialDuration={timer.initialDuration}
-            selectedMinutes={selectedMinutes}
-            selectedSeconds={selectedSeconds} 
-            />}
-        </Tab.Screen>
-        ))}
+          {timers.map((timer) => (
+            <Tab.Screen key={timer.id} name={timer.name}>
+              {() => (
+                <View style={{}}>
+                  <TimerWithRemove id={timer.id} style={{}}/>
+                    {isFirstTimerVisible && (
+                      <Timer
+                        duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
+                        onExpire={handleFirstTimerExpire}
+                        autoStart={false}
+                        isFirstTimerVisible={isFirstTimerVisible}
+                      />
+                    )}
+                    {isSecondTimerVisible && (
+                      <View>
+                        <TouchableOpacity onPress={handleStartFirstTimer} style={{}}>
+                          {/* contenido del TouchableOpacity */}
+                        </TouchableOpacity>
+                        <Timer duration={40} onExpire={handleSecondTimerExpire} />
+                      </View>
+                      )}
+                </View>
+                )}
+            </Tab.Screen>
+          ))}
         <Tab.Screen name="Agregar" component={AddTimerScreen} />
       </Tab.Navigator>
     </SafeAreaView>

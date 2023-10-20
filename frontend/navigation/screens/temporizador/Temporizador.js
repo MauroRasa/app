@@ -6,7 +6,9 @@ import {
   SafeAreaView,
   ImageBackground,
   StyleSheet, 
-  Dimensions
+  Dimensions,
+  Animated,
+  Easing
 } from 'react-native';
 import { useTimer } from 'react-timer-hook';
 import { PanGestureHandler} from 'react-native-gesture-handler';
@@ -14,6 +16,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import {LinearGradient} from 'expo-linear-gradient';
 import KeepKeyboardOpenTextInput from './KeepKeyboardOpenTextInput';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -28,8 +31,6 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + duration);
 
-
-    
   const {
     seconds,
     minutes,
@@ -38,8 +39,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
     pause,
     resume,
     restart,
-  } = useTimer({ expiryTimestamp, autoStart, onExpire
-  });
+  } = useTimer({ expiryTimestamp, autoStart, onExpire});
 
 
   const [isPressed, setIsPressed] = useState(false);
@@ -76,7 +76,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
         >
-          <Text style={{fontSize: 30, textAlign: 'center'}}>{isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Aprete el circulo para iniciar'): 'Descanso!'}</Text>
+          <Text style={{fontSize: 30, textAlign: 'center'}}>{isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Apretar el circulo para iniciar'): 'Descanso!'}</Text>
           <Text style={{fontSize: 50}}>{`${minutes}:${seconds}`}</Text>
         </TouchableOpacity>
       </View>
@@ -167,15 +167,45 @@ export default function Temporizador({navigation, route }) {
 }, [navigation]);
 // FIN
 
+// COACHMARK
+const [isShowing, setIsShowing] = useState(true);
+
+  const moveAnim = new Animated.Value(0);
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(moveAnim, {
+          toValue: windowHeight * 0.03,
+          duration: 800,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(moveAnim, {
+          toValue: 0,
+          duration: 800,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    animation.start();
+
+    return () => animation.stop();
+  }, [moveAnim]);
+// FIN
+
 
 // FUNCION ENCARGADA DE LA NAVEGACION ENTRE TEMPORIZADORES CON DESLIZAMIENTO PARA ARRIBA/ABAJO
 const handleGesture = ({ nativeEvent }) => {
   if (nativeEvent.translationY < -80) {
     // Si el gesto es hacia arriba
     navigation.navigate('TemporizadorAjustable');
+    setIsShowing(false);
   } else if (nativeEvent.translationY > 80) {
     // Si el gesto es hacia abajo
     navigation.navigate('TemporizadorAjustable');
+    setIsShowing(false);
   }
 };
 // FIN
@@ -209,20 +239,6 @@ const handleGesture = ({ nativeEvent }) => {
       console.error('Error al cargar desde AsyncStorage:', error);
     }
   };
-// FIN
-
-// ACTUALIZAR LA DURACIÓN DEL TEMPORIZADOR EN AsyncStorage
-const updateTimerDuration = async (timerId, duration) => {
-  try {
-    const updatedTimers = timers.map((timer) =>
-      timer.id === timerId ? { ...timer, initialDuration: duration } : timer
-    );
-    setTimers(updatedTimers);
-    await saveTimersToStorage(updatedTimers);
-  } catch (error) {
-    console.error('Error al actualizar la duración del temporizador:', error);
-  }
-};
 // FIN
 
 // ELIMINAR UN TEMPORIZADOR
@@ -259,6 +275,21 @@ const AddTimerScreen = () => {
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%'  }}>
+        {isShowing && (
+            <View style={stylesCoach.coachmarkContainer}>
+              <Animated.View
+                style={[
+                  stylesCoach.coachmark,
+                  {
+                    transform: [{ translateY: moveAnim }],
+                  },
+                ]}
+              >
+                <Text style={stylesCoach.coachmarkText}>Temporizador por tiempo</Text>
+                <MaterialIcons name="keyboard-arrow-down" size={24} color="white" />
+              </Animated.View>
+            </View>
+          )}
           <KeepKeyboardOpenTextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
             onChangeText={handleNameChange}
@@ -272,7 +303,7 @@ const AddTimerScreen = () => {
             onPress={() => navigation.navigate('Cronometro')}
             style={{
               position: 'absolute',
-              bottom: 20,
+              bottom: 150,
               alignSelf: 'center',
               backgroundColor: 'blue',
               padding: 20,
@@ -287,9 +318,34 @@ const AddTimerScreen = () => {
     );
   };
 // FIN
+
+// ESTILOS COACHMARK
+const stylesCoach = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  coachmarkContainer: {
+    position: 'absolute',
+    bottom: 50,
+    width: '100%',
+    alignItems: 'center',
+  },
+  coachmark: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  coachmarkText: {
+    marginRight: 5,
+    color: 'white'
+  },
+});
+// FIN
   
 // BOTON DELETE
-const TimerWithRemove = ({ id, initialDuration }) => {  
+const TimerWithRemove = ({ id}) => {  
   return (
     <View style={styles.timerContainer}>
     <TouchableOpacity style={styles.deleteButton} onPress={() => removeTimer(id)}>
@@ -399,22 +455,22 @@ const handleSecondTimerExpire = () => {
               {() => (
                 <View style={{}}>
                   <TimerWithRemove id={timer.id} style={{}}/>
-                  {isFirstTimerVisible && (
-                    <Timer
-                    duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
-                    onExpire={handleFirstTimerExpire}
-                    autoStart={false}
-                    isFirstTimerVisible={isFirstTimerVisible}
-                  />
-                  )}
-                  {isSecondTimerVisible && (
-                    <View>
-                      <TouchableOpacity onPress={handleStartFirstTimer} style={{}}>
-                        {/* contenido del TouchableOpacity */}
-                      </TouchableOpacity>
-                      <Timer duration={40} onExpire={handleSecondTimerExpire} />
-                    </View>
-                  )}
+                    {isFirstTimerVisible && (
+                      <Timer
+                        duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
+                        onExpire={handleFirstTimerExpire}
+                        autoStart={false}
+                        isFirstTimerVisible={isFirstTimerVisible}
+                    />
+                    )}
+                    {isSecondTimerVisible && (
+                      <View>
+                        <TouchableOpacity onPress={handleStartFirstTimer} style={{}}>
+                          {/* contenido del TouchableOpacity */}
+                        </TouchableOpacity>
+                        <Timer duration={40} onExpire={handleSecondTimerExpire} />
+                      </View>
+                    )}
                 </View>
               )}
             </Tab.Screen>

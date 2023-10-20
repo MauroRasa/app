@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Modal, Text, StyleSheet, Alert, Dimensions,TouchableOpacity } from 'react-native';
+import { View, Modal, Text, StyleSheet, Alert, Dimensions, TouchableOpacity, Image, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Input, Icon } from 'react-native-elements';
 import * as Font from 'expo-font';
@@ -30,28 +30,6 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
     const [email, setEmail] = useState('');
 
     const [fontLoaded, setFontLoaded] = useState(false);
-         
-    const handleEnviarGet = () => {
-        fetch('http://192.168.43.67:3000/api/usuarios', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // Obtener el texto de la respuesta
-                } else {
-                    throw new Error('La solicitud no fue exitosa');
-                }
-            })
-            .then(result => {
-                console.log('Respuesta del servidor:', result);             
-            })
-            .catch(error => {
-                console.error('Error en la solicitud:', error);
-                });
-    };
         
     const handleEnviar = () => {
         if (!usuario || !email || !Pass) {
@@ -63,7 +41,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
                         Pass: Pass
                     };
             
-                fetch('http://192.168.43.67:3000/api/usuarios', {
+                fetch('http://192.168.100.219:3000/api/usuarios', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -84,7 +62,6 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
                         text: 'OK',
                             onPress: () => {
                                 closeModal();
-                                navigation.navigate('inicio');
                                 },
                             },
                         ]);
@@ -106,7 +83,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
           <View style={[styles.modalContainer, {left: anchoUsario, top: alturaUsuario}]}>
             <View style={styles.formulario}>
                     {fontLoaded ? (
-                        <Text style={[{fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', top: 20, }]}>Registro</Text>
+                        <Text style={[{fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', bottom: '90%', }]}>Registro</Text>
                     ) : (<Text>Loading...</Text>
                     )}
                     <Input
@@ -136,7 +113,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
                         />
                         }
                     />
-                    <View style={{borderRadius: 10, backgroundColor: 'blue', width: '70%', height: '12%', justifyContent: 'center', alignItems: 'center', top: '20%'}}>
+                    <View style={{borderRadius: 10, backgroundColor: 'blue', width: '70%', height: '12%', justifyContent: 'center', alignItems: 'center',}}>
                         <TouchableOpacity onPress={handleEnviar}>
                             <Text style={{ color: 'white', fontSize: 32, fontWeight: 'bold'}}> Registrarse </Text>
                             </TouchableOpacity>
@@ -167,6 +144,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '30%'
   },
   Input: {
     width: '100%',

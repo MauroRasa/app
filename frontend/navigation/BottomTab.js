@@ -49,8 +49,8 @@ export const BottomTab = () => {
                 // tabBarInactiveBackgroundColor: 'orange',
                 showLabel: false, // Ocultar etiquetas
                 tabBarStyle: {
-                    display: route.name === 'TemporizadorConjunto' ? 'none' : 'flex', // Oculta la tabBar si la ruta es 'Tempo'
-                    height: route.name === 'TemporizadorConjunto' ? 0 : 55, // Ajusta la altura de la tabBar según la ruta
+                    display: route.name === 'Temporizadores' ? 'none' : 'flex', // Oculta la tabBar si la ruta es 'Tempo'
+                    height: route.name === 'Temporizadores' ? 0 : 55, // Ajusta la altura de la tabBar según la ruta
                     transition: 'height 0.3s', // Agrega una transición suave de 0.3 segundos
                   },
                   tabBarHideOnKeyboard: true,
@@ -65,10 +65,10 @@ export const BottomTab = () => {
                         case 'ChatFPG':
                             iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
                             break;
-                        case 'TemporizadorConjunto':
+                        case 'Temporizadores':
                             iconName = focused ? 'timer' : 'timer-outline';
                             break;
-                        case 'NavegadorScreens':
+                        case 'Escalera':
                             if (focused) {
                                 return (
                                   <View style={{ flex: 1 }}>
@@ -76,7 +76,7 @@ export const BottomTab = () => {
                                   </View>
                                 );
                               } else {
-                                iconName = 'barbell-outline';
+                                iconName = 'code-working';
                               }
                         break;
                     }
@@ -91,7 +91,7 @@ export const BottomTab = () => {
             {/* NAVEGACION */}
             <Tab.Screen name = 'Home' component = { HomeScreen } options={{ headerShown: false }} />
             <Tab.Screen name = 'ChatFPG' component = { ChatFPG } options={{ headerShown: false }} />
-            <Tab.Screen name = "TemporizadorConjunto" options={{ headerShown: false }}>
+            <Tab.Screen name = "Temporizadores" options={{ headerShown: false }}>
                 {() => (
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <SafeAreaView style={{ flex: 1 }}>
@@ -104,7 +104,7 @@ export const BottomTab = () => {
                 </GestureHandlerRootView> 
                 )}
             </Tab.Screen>
-            <Tab.Screen name = 'NavegadorScreens' options={{ headerShown: false }}>
+            <Tab.Screen name = 'Escalera' options={{ headerShown: false }}>
                 {() => (
                 <SafeAreaView style={{ flex: 1 }}>
                     <Stack.Navigator initialRouteName="Screen1" 

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 const LogoutButton = () => {
@@ -9,7 +10,7 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://192.168.43.67:3000/api/logout', {
+      const response = await fetch('http://192.168.100.219:3000/api/logout', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ const LogoutButton = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleLogout}>
-        <Text style={styles.buttonText}>Cerrar Sesión</Text>
+        <Icon name= "exit" size={40} />
       </TouchableOpacity>
     </View>
   );

@@ -35,7 +35,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
         try {
           const userToken = await AsyncStorage.getItem('userToken');
           if (userToken) {
-            const response = await fetch('http://192.168.43.67:3000/api/verifyToken', {
+            const response = await fetch('http://192.168.100.219:3000/api/verifyToken', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
           return;
         }
         try {
-          const response = await fetch('http://192.168.43.67:3000/api/login', {
+          const response = await fetch('http://192.168.100.219:3000/api/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
       <View style={[styles.modalContainer, { left: anchoUsario, top: alturaUsuario }]}>
         <View style={styles.formulario}>
           {fontLoaded ? (
-            <Text style={[{ fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', top: 20, }]}>Iniciar Sesión</Text>
+            <Text style={[{ fontFamily: 'Plaster-Regular', fontSize: 48, fontWeight: 'bold', position: 'absolute', bottom: '90%', }]}>Iniciar Sesión</Text>
           ) : (<Text>Loading...</Text>)}
           <Input
             placeholder="Usuario"
@@ -112,7 +112,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
               />
             }
           />
-          <View style={{ borderRadius: 10, backgroundColor: 'blue', width: '70%', height: '12%', justifyContent: 'center', alignItems: 'center', top: '20%' }}>
+          <View style={{ borderRadius: 10, backgroundColor: 'blue', width: '70%', height: '12%', justifyContent: 'center', alignItems: 'center', top: '15%' }}>
             <TouchableOpacity onPress={handleLogin}>
               <Text style={{ color: 'white', fontSize: 32, fontWeight: 'bold' }}> Iniciar </Text>
             </TouchableOpacity>
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '30%'
   },
   Input: {
     width: '100%',

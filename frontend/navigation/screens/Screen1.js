@@ -1,140 +1,284 @@
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Dimensions, LogBox  } from 'react-native';
-import { Table, Row, Rows } from 'react-native-table-component';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, ScrollView, StyleSheet, LogBox, TouchableOpacity, Text, Animated, Easing, Dimensions, FlatList  } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); 
 
 
 const Screen1 = ({navigation}) => {
 
-    const [tableHead, setTableHead] = useState(['Primer Semana']);
-    const [tableHeadSec, setTableHeadSec] = useState(['Día', 'Grupo Muscular', 'Ejercicios Recomendados', 'Reps', 'Descanso']);
-    const [tableData, setTableData] = useState([
-        ['Lunes', 'Pecho, Triceps', 'Press de banca', '8/12 reps', '60-90s'],
-        ['', '', 'Aperturas con mancuernas/maquina', '8-12 reps', '60-90s'],
-        ['', '', 'Fondos en paralelas', '8-12 reps', '60-90s'],
-        ['', '', 'Press inclinado con mancuernas ', '8-12 reps', '60-90s'],
-        ['', '', 'Extensiones de tríceps con polea', '8-12 reps', '60-90s'],
-        ['', '', 'Patada de tríceps con mancuerna', '8-12 reps', '60-90s'],
-        ['Martes', 'Espalda y Bíceps', 'Dominadas', '8-12 reps', '60-90s'],
-        ['', '', 'Remo con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Remo con mancuernas', '8-12 reps', '60-90s'],
-        ['', '', 'Curl de bíceps con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Curl de martillo', '8-12 reps', '60-90s'],
-        ['', '', 'Dominadas con agarre inverso', '8-12 reps', '60-90s'],
-        ['Miercoles', 'Piernas, Hombros', 'Sentadillas', '8/12 reps', '60-90s'],
-        ['', '', 'Prensa de piernas', '8-12 reps', '60-90s'],
-        ['', '', 'Zancadas ', '8-12 reps', '60-90s'],
-        ['', '', 'Peso muerto rumano', '8-12 reps', '60-90s'],
-        ['', '', 'Press militar con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Elevaciones laterales con mancuernas', '8-12 reps', '60-90s'],
-        ['', '', 'Elevaciones frontales con mancuernas', '8-12 reps', '60-90s'],
-        ['Jueves', 'Pecho, Triceps', 'Press de banca', '8-12 reps', '60-90s'],
-        ['', '', 'Aperturas con mancuernas/maquina', '8-12 reps', '60-90s'],
-        ['', '', 'Fondos en paralelas', '8-12 reps', '60-90s'],
-        ['', '', 'Press inclinado con mancuernas ', '8-12 reps', '60-90s'],
-        ['', '', 'Extensiones de tríceps con polea', '8-12 reps', '60-90s'],
-        ['', '', 'Patada de tríceps con mancuerna', '8-12 reps', '60-90s'],
-        ['Viernes', 'Espalda y Bíceps', 'Dominadas', '8-12 reps', '60-90s'],
-        ['', '', 'Remo con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Remo con mancuernas', '8-12 reps', '60-90s'],
-        ['', '', 'Curl de bíceps con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Curl de martillo', '8-12 reps', '60-90s'],
-        ['', '', 'Dominadas con agarre inverso', '8-12 reps', '60-90s'],
-        ['Sabado', 'Piernas, Hombros', 'Sentadillas', '8/12 reps', '60-90s'],
-        ['', '', 'Prensa de piernas', '8-12 reps', '60-90s'],
-        ['', '', 'Zancadas ', '8-12 reps', '60-90s'],
-        ['', '', 'Peso muerto rumano', '8-12 reps', '60-90s'],
-        ['', '', 'Press militar con barra', '8-12 reps', '60-90s'],
-        ['', '', 'Elevaciones laterales con mancuernas', '8-12 reps', '60-90s'],
-        ['', '', 'Elevaciones frontales con mancuernas', '8-12 reps', '60-90s'],
-    ]);
+  useEffect(() => {
+    const unlockScreenOrientation = async () => {
+        await ScreenOrientation.unlockAsync();
+    };
 
-    const [tableWidth, setTableWidth] = useState(Dimensions.get('window').width * 0.97);
-
-    useEffect(() => {
-        const updateWidth = () => {
-            const windowWidth = Dimensions.get('window').width;
-            const windowHeight = Dimensions.get('window').height;
-            setTableWidth(Math.max(windowWidth, windowHeight) * 0.97);
-        };
-    
-        updateWidth();
-    
-        const onChange = () => {
-            updateWidth();
-        };
-    
-        const subscription = Dimensions.addEventListener('change', onChange);
-    
-        return () => subscription && subscription.remove(); 
-    }, []);
-
-
-    useEffect(() => {
-        const unlockScreenOrientation = async () => {
-            await ScreenOrientation.unlockAsync();
-        };
-
-        const onFocus = navigation.addListener('focus', () => {
-            unlockScreenOrientation();
-        });
-
-        return onFocus;
-    }, [navigation]);
-
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-        },
-        scrollView: {
-            flex: 1,
-        },
-        tableContainer: {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: 10,
-            marginTop: 40
-        },
-        table: {
-            width: tableWidth,
-        },
-        head: { 
-            height: 40, 
-            backgroundColor: '#f1f8ff' 
-        },
-        headSec: {
-            height: 50, 
-            backgroundColor: 'lightyellow' 
-        }
+    const onFocus = navigation.addListener('focus', () => {
+        unlockScreenOrientation();
     });
+
+    return onFocus;
+}, [navigation]);
+
+    // COACHMARK
+    const [opacity, setOpacity] = useState(0.7);
+    const [isButtonVisible, setIsButtonVisible] = useState(true);
+  
+    const handlePress = () => {
+      setOpacity(0);
+      setIsButtonVisible(false);
+    };
+  
+    const translateY = useRef(new Animated.Value(0)).current;
+    const [currentIcon, setCurrentIcon] = useState('barbell');
+  
+    useEffect(() => {
+      const animate = () => {
+        Animated.sequence([
+          Animated.timing(translateY, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateY, {
+            toValue: 100,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setCurrentIcon((prev) => {
+            if (prev === 'barbell') {
+              return 'restaurant';
+            } else if (prev === 'restaurant') {
+              return 'caret-forward-circle-outline';
+            } else {
+              return 'barbell';
+            }
+          });
+          animate();
+        });
+      };
+  
+      animate();
+    }, [translateY]);
+    // FIN
+
+    const commonDetails = "8-12 reps - 60-90 segundos - 3-4 Series";
+
+    const DATA = [
+      {
+        day: 'LUNES',
+        muscleGroup: 'Pecho, Triceps',
+        exercises: [
+          {
+            name: 'Press de banca',
+          },
+          {
+            name: 'Aperturas con mancuernas/maquina',
+          },
+          {
+            name: 'Fondos en paralelas',
+          },
+          {
+            name: 'Press inclinado con mancuernas',
+          },
+          {
+            name: 'Extensiones de tríceps con polea',
+          },
+          {
+            name: 'Patada de tríceps con mancuerna',
+          },
+        ],
+      },
+      {
+        day: 'MARTES',
+        muscleGroup: 'Espalda y Bíceps',
+        exercises: [
+          {
+            name: 'Dominadas',
+          },
+          {
+            name: 'Remo con barra',
+          },
+          {
+            name: 'Remo con mancuernas',
+          },
+          {
+            name: 'Curl de bíceps con barra',
+          },
+          {
+            name: 'Curl de martillo',
+          },
+          {
+            name: 'Dominadas con agarre inverso',
+          },
+        ],
+      },
+      {
+        day: 'MIÉRCOLES',
+        muscleGroup: 'Piernas y Hombros',
+        exercises: [
+          {
+            name: 'Sentadillas',
+          },
+          {
+            name: 'Prensa de piernas',
+          },
+          {
+            name: 'Zancadas',
+          },
+          {
+            name: 'Peso muerto rumano',
+          },
+          {
+            name: 'Press militar con barra',
+          },
+          {
+            name: 'Elevaciones laterales con mancuernas',
+          },
+          {
+            name: 'Elevaciones frontales con mancuernas',
+          },
+        ],
+      },
+      {
+        day: 'JUEVES',
+        muscleGroup: 'Pecho, Triceps',
+        exercises: [
+          {
+            name: 'Press de banca',
+          },
+          {
+            name: 'Aperturas con mancuernas/maquina',
+          },
+          {
+            name: 'Fondos en paralelas',
+          },
+          {
+            name: 'Press inclinado con mancuernas',
+          },
+          {
+            name: 'Extensiones de tríceps con polea',
+          },
+          {
+            name: 'Patada de tríceps con mancuerna',
+          },
+        ],
+      },
+      // Asegúrate de agregar los datos para el resto de los días de la semana de manera similar
+    ];
+
+    const Item = ({ item }) => (
+      <View style={styles.item}>
+        <Text style={styles.day}>{item.day}</Text>
+        <Text style={styles.muscleGroup}>{item.muscleGroup}</Text>
+        {item.exercises.map((exercise, index) => (
+          <View key={index} style={styles.exercise}>
+            <Text style={styles.exerciseName}>{exercise.name}</Text>
+            <Text style={styles.exerciseDetails}>{commonDetails}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  
+      const renderItem = ({ item }) => {
+        if (!item) {
+          return null; 
+        }
+        return (
+          <Item
+            item={item} // Pasar el objeto completo en lugar de acceder a sus propiedades directamente
+          />
+        );
+      };
+
 
     return (
         <View style={styles.container}>
+          <Text style={styles.title}>Rutina Recomendada</Text>
+            {isButtonVisible && (
+                <TouchableOpacity style={[styles.overlay, { opacity }]} activeOpacity={1} onPress={handlePress}>
+                    <Text style={{textAlign:'center', marginTop: 300}}>Toque cualquier lado para continuar</Text>
+                    <View style={{ position: 'absolute', bottom: 0, right: 0, marginBottom: '20%', marginRight: 20,alignItems: 'flex-end', }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', fontSize: 15, marginRight: 8 }}>
+                            Deslice el icono para 
+                        </Text>
+                        <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', fontSize: 15 }}>
+                            cambiar entre pantallas
+                        </Text>
+                        <Animated.View style={[styles.iconContainer, { transform: [{ translateY }] }]}>
+                            <Icon name={currentIcon} size={50} />
+                        </Animated.View>
+                    </View>
+                </TouchableOpacity>
+            )}
           <ScrollView horizontal={true}>
-            <View style={styles.tableContainer}>
-              <ScrollView>
-                <Table style={styles.table} borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
-                  <Row data={tableHead} style={styles.head} />
-                  <Row 
-                    data={tableHeadSec} 
-                    style={styles.headSec} 
-                    flexArr={[0.4, 0.7, 2, 0.5, 0.5]} />
-                  <Rows
-                        data={tableData}
-                        flexArr={[0.4, 0.7, 2, 0.5, 0.5]} 
-                        style= {styles.table}
-                    />
-                </Table>
-              </ScrollView>
-            </View>
+            <FlatList
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.day} // Asegúrate de usar una clave única para cada elemento de la lista
+          />
           </ScrollView>
         </View>
       );
 };
 
 export default Screen1;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      zIndex: 100
+    },
+    coachmark: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+    },
+    coachmarkText: {
+      marginRight: 5,
+    },
+    iconContainer: {
+      width: 50,
+      height: 50,
+    },
+    item: {
+      backgroundColor: '#FFC888',
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+    },
+    day: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    muscleGroup: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    exercise: {
+      marginBottom: 5,
+    },
+    exerciseName: {
+      fontWeight: 'bold',
+    },
+    exerciseDetails: {
+      fontStyle: 'italic',
+    },
+    title: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      marginTop: 20,
+      marginBottom: 20,
+      alignSelf: 'center',
+      color: '#333',
+    },
+  });

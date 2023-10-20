@@ -1,3 +1,72 @@
+    const handleEnviar = () => {
+        if (!usuario || !email || !Pass) {
+            Alert.alert('Campos Obligatorios', 'Todos los campos son obligatorios');
+                return;}
+                    const datos = {
+                        usuario: usuario,
+                        email: email,
+                        Pass: Pass
+                    };
+            
+        fetch('http://192.168.100.219:3000/api/usuarios', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datos),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('La solicitud no fue exitosa');
+                }
+            })
+            .then(result => {
+                console.log('Respuesta del servidor:', result);
+                Alert.alert('Usuario agregado correctamente', '', [
+                {
+                text: 'OK',
+                    onPress: () => {
+                        closeModal();
+                        },
+                    },
+                ]);
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                alert('Error en la conexión al backend o la base de datos');
+                    });
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from 'react';
 // import { 
 //   View, 
