@@ -42,6 +42,9 @@ const Cronometro = ({navigation}) => {
         <Text style={styles.timerText}>
             {minutes}:{seconds}
         </Text>
+        <Text style={{fontSize: 28, marginBottom: 40}}>
+          {isRunning ? "Suerte!" : "Esperando a que inicie..."}
+        </Text>
         <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={handleStart}>
                 <Text style={styles.buttonText}>Iniciar</Text>
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
     timerText: {
         fontSize: 60,
         fontWeight: 'bold',
-        color: '#FFFFFF',
+        color: '#000000',
         marginBottom: 50,
     },
     buttonContainer: {

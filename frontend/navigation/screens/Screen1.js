@@ -9,6 +9,8 @@ LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const Screen1 = ({navigation}) => {
 
+  const windowWidth = Dimensions.get('window').width;
+
   useEffect(() => {
     const unlockScreenOrientation = async () => {
         await ScreenOrientation.unlockAsync();
@@ -165,11 +167,62 @@ const Screen1 = ({navigation}) => {
           },
         ],
       },
+      {
+        day: 'VIERNES',
+        muscleGroup: 'Espalda y Bíceps',
+        exercises: [
+          {
+            name: 'Dominadas',
+          },
+          {
+            name: 'Remo con barra',
+          },
+          {
+            name: 'Remo con mancuernas',
+          },
+          {
+            name: 'Curl de bíceps con barra',
+          },
+          {
+            name: 'Curl de martillo ',
+          },
+          {
+            name: 'Dominadas con agarre inverso',
+          },
+        ],
+      },
+      {
+        day: 'Sabado',
+        muscleGroup: 'Piernas y Hombros',
+        exercises: [
+          {
+            name: 'Sentadillas',
+          },
+          {
+            name: 'Prensa de piernas',
+          },
+          {
+            name: 'Zancadas',
+          },
+          {
+            name: 'Peso muerto rumano',
+          },
+          {
+            name: 'Press militar con barra',
+          },
+          {
+            name: 'Elevaciones laterales con mancuernas',
+          },
+          {
+            name: 'Elevaciones frontales con mancuernas',
+          },
+        ],
+      },
       // Asegúrate de agregar los datos para el resto de los días de la semana de manera similar
     ];
 
     const Item = ({ item }) => (
-      <View style={styles.item}>
+      <View style={[styles.item, { width: windowWidth }]}>
         <Text style={styles.day}>{item.day}</Text>
         <Text style={styles.muscleGroup}>{item.muscleGroup}</Text>
         {item.exercises.map((exercise, index) => (
@@ -195,7 +248,7 @@ const Screen1 = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-          <Text style={styles.title}>Rutina Recomendada</Text>
+          <Text style={styles.title}>Rutinas Recomendadas</Text>
             {isButtonVisible && (
                 <TouchableOpacity style={[styles.overlay, { opacity }]} activeOpacity={1} onPress={handlePress}>
                     <Text style={{textAlign:'center', marginTop: 300}}>Toque cualquier lado para continuar</Text>

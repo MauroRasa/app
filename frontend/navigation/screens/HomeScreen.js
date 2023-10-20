@@ -51,15 +51,6 @@ const HomeScreen = ({ navigation }) => {
         bienestar nunca ha sido tan sencillo!
       </Text>
       <Text style={styles.title}>¡Comienza tu viaje hoy!</Text>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Ir a Temporizador</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Crear Plan Alimentacion</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Actualizar Datos</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -126,7 +117,7 @@ const styles = StyleSheet.create({
   presentationText: {
     fontSize: 20,
     textAlign: 'center',
-    marginTop: '30%',
+    marginTop: '45%',
     marginHorizontal: 20,
     color: '#333',
   },

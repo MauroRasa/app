@@ -3,6 +3,9 @@ import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {Video} from 'expo-av';
 import { StatusBar } from 'expo-status-bar';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Warning: ...']);
 
 const Tab = createMaterialTopTabNavigator();
 

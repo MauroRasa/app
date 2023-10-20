@@ -25,7 +25,7 @@ const AlimentacionInicio = ({navigation}) => {
     return (
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>¡Bienvenido a FitPlanGains!</Text>
+            <Text style={styles.headerText}>¡Bienvenido a FitPlanGains Comida y Nutricion!</Text>
             <Text style={styles.subHeaderText}>
               Tu destino para un cuerpo más fuerte y una mente más sana.
             </Text>
@@ -33,9 +33,6 @@ const AlimentacionInicio = ({navigation}) => {
           <View style={styles.content}>
             <Text style={styles.highlightedText}>
               Descubre una nueva forma de vivir una vida saludable y en forma.
-            </Text>
-            <Text style={styles.normalText}>
-              Ofrecemos una amplia gama de entrenamientos personalizados, programas de dieta y consejos de salud para ayudarte en tu viaje de fitness.
             </Text>
             <Text style={styles.normalText}>¡Comienza hoy mismo y alcanza tus metas de fitness!</Text>
             <View style={styles.imageContainer}>
@@ -48,7 +45,7 @@ const AlimentacionInicio = ({navigation}) => {
                 style={styles.button}
                 onPress={() => navigation.navigate('Alimentacion')}
             >
-                <Text style={styles.buttonText}>Calcular Plan de Alimentacion</Text>
+                <Text style={styles.buttonText}>Calcular calorias para consumir x día</Text>
             </TouchableOpacity>
           </View>
         </View>
