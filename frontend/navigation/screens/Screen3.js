@@ -12,12 +12,6 @@ const Tab = createMaterialTopTabNavigator();
 const Pecho = () => {
     const video = React.useRef(null);
 
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
-
     return (
         <View style={styles.container}>
             <Video
@@ -27,6 +21,7 @@ const Pecho = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
@@ -35,12 +30,6 @@ const Pecho = () => {
 
 const Biceps = () => {
     const video = React.useRef(null);
-
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
 
     return (
         <View style={styles.container}>
@@ -51,6 +40,7 @@ const Biceps = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
@@ -59,12 +49,6 @@ const Biceps = () => {
 
 const Piernas = () => {
     const video = React.useRef(null);
-
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
 
     return (
         <View style={styles.container}>
@@ -75,6 +59,7 @@ const Piernas = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
@@ -83,12 +68,6 @@ const Piernas = () => {
 
 const Hombros = () => {
     const video = React.useRef(null);
-
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
 
     return (
         <View style={styles.container}>
@@ -99,6 +78,7 @@ const Hombros = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
@@ -107,12 +87,6 @@ const Hombros = () => {
 
 const Espalda = () => {
     const video = React.useRef(null);
-
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
 
     return (
         <View style={styles.container}>
@@ -123,6 +97,7 @@ const Espalda = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
@@ -131,12 +106,6 @@ const Espalda = () => {
 
 const Triceps = () => {
     const video = React.useRef(null);
-
-    useEffect(() => {
-        (async () => {
-          await video.current.playFromPositionAsync(0); // Reproduce el video desde el principio
-        })();
-      }, []);
 
     return (
         <View style={styles.container}>
@@ -147,6 +116,7 @@ const Triceps = () => {
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                isMuted
             />
             <StatusBar style="auto" />
         </View>
