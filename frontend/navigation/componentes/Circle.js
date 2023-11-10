@@ -23,10 +23,10 @@ const CircleComponent = ({ modals }) => {
 
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
-  const textSize = windowWidth * 0.55;
-  const textTop = (windowHeight / 2.7) - (textSize / 1);
-  const circleSizeAncho = windowWidth * 1.1;
-  const circleSizeAlto = windowHeight * 0.55;
+  const textSize = windowWidth * 1.6;
+  const textTop = (windowHeight / 2) - (textSize / 2);
+  const circleSizeAncho = windowWidth * 1;
+  const circleSizeAlto = windowHeight * 0.5; 
   const initialCircleTop = -1.4;
   const finalCircleTop = -1;
 
@@ -47,6 +47,19 @@ const CircleComponent = ({ modals }) => {
     }
   }, [modals, circleTopValue]);
 
+  
+  const styles = StyleSheet.create({
+    container: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    circle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(128, 128, 128, 0.7)',
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -63,6 +76,7 @@ const CircleComponent = ({ modals }) => {
             ],
             width: circleSizeAncho,
             height: circleSizeAlto,
+            borderRadius: circleSizeAlto / 2, 
           },
         ]}
       >
@@ -75,18 +89,5 @@ const CircleComponent = ({ modals }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(128, 128, 128, 0.7)',
-    borderRadius: 999,
-  },
-});
 
 export default CircleComponent;

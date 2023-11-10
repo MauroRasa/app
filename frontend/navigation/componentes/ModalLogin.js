@@ -68,7 +68,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
           });
           if (response.ok) {
             const data = await response.json();
-            await AsyncStorage.setItem('userToken', data.userToken); // Asegúrate de cambiar 'userToken' por la clave adecuada
+            await AsyncStorage.setItem('userToken', data.userToken); 
             // Navegar a la pantalla AppPrincipal después de guardar el token
             navigation.navigate('AppPrincipal');
           } else {

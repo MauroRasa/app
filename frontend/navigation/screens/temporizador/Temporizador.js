@@ -22,6 +22,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { BackHandler } from 'react-native';
 import { useBackHandler } from '@react-native-community/hooks';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { Picker } from '@react-native-picker/picker';
+
 
 
 
@@ -44,68 +47,89 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
 
   const [isPressed, setIsPressed] = useState(false);
 
+  const windowHeight = Dimensions.get('window').height;
+  const iconSize = windowHeight * 0.04;
+
+
 
 
   return (
-    <ImageBackground
-      source={require('./assets/pesas_tempo.jpg')}
-      style={styles.container}
-    >
-      <View style={{ marginTop: '45%', alignItems: 'center'}}>
-        <TouchableOpacity
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: isFirstTimerVisible ? '#B22222' : 'yellow',
-            borderRadius: 999,
-            borderColor: 'gray', 
-            borderWidth: 3,
-            height: '72%',
-            width: '85%',
-            shadowColor: 'black',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: isPressed ? 0.9 : 0.9, // Ajustar la opacidad de la sombra
-            shadowRadius: 3.84,
-            elevation: 5,
-            overflow: 'hidden',
-          }}
-          onPress={isRunning ? pause : (pause ? resume : start)}
-          onPressIn={() => setIsPressed(true)}
-          onPressOut={() => setIsPressed(false)}
-        >
-          <Text style={{fontSize: 30, textAlign: 'center'}}>{isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Apretar el circulo para iniciar'): 'Descanso!'}</Text>
-          <Text style={{fontSize: 50}}>{`${minutes}:${seconds}`}</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Contenedor para la sección de tiempo */}
+      <View style={styles.timeContainer}>
+        <Text style={{ fontSize: 120, textAlign: 'center', top: '100%', color: isFirstTimerVisible ? 'white' : '#FFD700' }}>
+          {minutes <= 9 ? (seconds <= 9 ? `0${minutes}:0${seconds}` : `0${minutes}:${seconds}`) : `${minutes}:${seconds}`}
+        </Text>
       </View>
   
-      <TouchableOpacity 
-        onPress={() => {
-          const time = new Date();
-          time.setSeconds(time.getSeconds() + 0);
-          restart(time, false);
-        }}
-        style={{
-          position: 'absolute',
-          alignSelf: 'center',
-          bottom: 120,
-        }}
-      >
-        <Text style={{ backgroundColor: 'blue', padding: 20, borderRadius: 100, textAlign: 'center', justifyContent: 'center',}}>
-          Finalizar Temporizador
-        </Text>
-      </TouchableOpacity>
-    </ImageBackground>
-  );  
-}
+      {/* Contenedor para la sección del círculo */}
+      <View style={{ marginTop: '80%', alignItems: 'center', backgroundColor: 'gray', flex: 1}}>
+        <AnimatedCircularProgress
+          style={{ marginTop: 40 }}  
+          size={170}
+          width={10}
+          fill={(duration - seconds) / duration * 100}
+          tintColor="#6C757D"
+          backgroundColor="white"
+        >
+          {(fill) => (
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: isFirstTimerVisible ? '#CED4DA' : '#CED4DA',
+                borderRadius: 999,
+                borderColor: 'gray',
+                borderWidth: 3,
+                height: '72%',
+                width: '72%',
+                shadowColor: 'black',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: isPressed ? 0.9 : 0.9,
+                shadowRadius: 3.84,
+                elevation: 5,
+                overflow: 'hidden',
+              }}
+              onPress={isRunning ? pause : (pause ? resume : start)}
+              onPressIn={() => setIsPressed(true)}
+              onPressOut={() => setIsPressed(false)}
+            >
+              <Text style={{ fontSize: 20, textAlign: 'center' }}>
+                {isFirstTimerVisible ? (isRunning ? 'Rutina en curso...' : 'Empezar') : 'Descanso!'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </AnimatedCircularProgress>
+          <TouchableOpacity
+          onPress={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + 0);
+            restart(time, false);
+          }}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '30%',
+            right: 20
+          }}
+        >
+          <Text style={{ backgroundColor: 'gray', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white'  }}>
+            <Icon name="check" size={iconSize} color="white" />
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+      }  
 
 
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-
+    backgroundColor: '#6C757D'
   },
 });
 
@@ -124,6 +148,13 @@ export default function Temporizador({navigation, route }) {
 
   const [stopTime, setStopTime] = useState(null);
   const storageKey = 'timersFromTemporizador';
+
+  const [selectedSeconds, setSelectedSeconds] = useState(0);
+
+  const handleSecondsChange = (itemValue) => {
+    setSelectedSeconds(itemValue);
+  };
+
 
   useBackHandler(() => {
     navigation.reset({
@@ -358,7 +389,8 @@ const TimerWithRemove = ({ id}) => {
 };
   const styles = StyleSheet.create({
     timerContainer: {
-      top: '90%',
+      top: '15%',
+      left: '40%'
     },
     deleteButton: {
       position: 'absolute',
@@ -455,6 +487,17 @@ const handleSecondTimerExpire = () => {
               {() => (
                 <View style={{}}>
                   <TimerWithRemove id={timer.id} style={{}}/>
+                  <Picker
+                    id={timer.id}
+                    selectedValue={selectedSeconds}
+                    onValueChange={handleSecondsChange}
+                    style={{ height: 50, width: 100, color: 'white', position:'absolute'}}
+                    itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
+                  >
+                    {Array.from({ length: 400 }, (_, i) => (
+                      <Picker.Item key={i} label={i.toString()} value={i} />
+                    ))}
+                  </Picker>
                     {isFirstTimerVisible && (
                       <Timer
                         duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
@@ -468,7 +511,7 @@ const handleSecondTimerExpire = () => {
                         <TouchableOpacity onPress={handleStartFirstTimer} style={{}}>
                           {/* contenido del TouchableOpacity */}
                         </TouchableOpacity>
-                        <Timer duration={40} onExpire={handleSecondTimerExpire} />
+                        <Timer duration={selectedSeconds} onExpire={handleSecondTimerExpire} />
                       </View>
                     )}
                 </View>
