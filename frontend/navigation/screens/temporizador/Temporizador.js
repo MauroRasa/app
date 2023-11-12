@@ -16,6 +16,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import {LinearGradient} from 'expo-linear-gradient';
 import KeepKeyboardOpenTextInput from './KeepKeyboardOpenTextInput';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icono from 'react-native-vector-icons/Ionicons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,6 +39,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
     seconds,
     minutes,
     isRunning,
+    totalSeconds,
     start,
     pause,
     resume,
@@ -47,9 +49,11 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
 
   const [isPressed, setIsPressed] = useState(false);
 
+  const [sumarTiempo, setSumarTiempo] = useState(totalSeconds);
+  const [seSumoTiempo, setSeSumoTiempo] = useState(false);
+
   const windowHeight = Dimensions.get('window').height;
   const iconSize = windowHeight * 0.04;
-
 
 
 
@@ -57,18 +61,74 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
     <View style={styles.container}>
       {/* Contenedor para la sección de tiempo */}
       <View style={styles.timeContainer}>
-        <Text style={{ fontSize: 120, textAlign: 'center', top: '100%', color: isFirstTimerVisible ? 'white' : '#FFD700' }}>
+        <Text style={{ fontSize: 120, textAlign: 'center', top: 240, color: isFirstTimerVisible ? 'white' : '#FFD700' }}>
           {minutes <= 9 ? (seconds <= 9 ? `0${minutes}:0${seconds}` : `0${minutes}:${seconds}`) : `${minutes}:${seconds}`}
         </Text>
+        <TouchableOpacity
+          onPress={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + duration);
+            setSeSumoTiempo(false);
+            restart(time, false);
+          }}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            left: '6%',
+            top: 500
+          }}
+        >
+          <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white'  }}>
+            <Icon name="refresh" size={iconSize} color="white" />
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + (60 + totalSeconds));
+            setSeSumoTiempo(true);
+            setSumarTiempo(totalSeconds + 60);
+            restart(time, isRunning ? true : false);
+          }}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            left: '41%',
+            top: 500
+          }}
+        >
+          <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white', fontSize: 30, color: 'white'  }}>
+            +60
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + (10 + totalSeconds));
+            setSeSumoTiempo(true);
+            setSumarTiempo(totalSeconds + 10);
+            restart(time, isRunning ? true : false);
+          }}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            left: '77%',
+            top: 500
+          }}
+        >
+          <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white', fontSize: 30, color: 'white'  }}>
+              +10
+          </Text>
+        </TouchableOpacity>
       </View>
   
       {/* Contenedor para la sección del círculo */}
-      <View style={{ marginTop: '80%', alignItems: 'center', backgroundColor: 'gray', flex: 1}}>
+      <View style={{ top: '53%', alignItems: 'center', backgroundColor: 'gray', flex: 1}}>
         <AnimatedCircularProgress
           style={{ marginTop: 40 }}  
-          size={170}
+          size={200}
           width={10}
-          fill={(duration - seconds) / duration * 100}
+          fill={seSumoTiempo === false ? ((duration - totalSeconds) / duration * 100) : ((sumarTiempo - totalSeconds) / sumarTiempo * 100)}
           tintColor="#6C757D"
           backgroundColor="white"
         >
@@ -112,7 +172,7 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            top: '30%',
+            top: '13%',
             right: 20
           }}
         >
@@ -139,7 +199,7 @@ const styles = StyleSheet.create({
 export default function Temporizador({navigation, route }) {
   // DECLARACIONES
   const [timers, setTimers] = useState([]);
-  const [newTimerId, setNewTimerId] = useState(1); // Iniciar en 1
+  const [newTimerId, setNewTimerId] = useState(1); 
 
   const Tab = createMaterialTopTabNavigator();
 
@@ -153,6 +213,12 @@ export default function Temporizador({navigation, route }) {
 
   const handleSecondsChange = (itemValue) => {
     setSelectedSeconds(itemValue);
+  };
+
+    const [selectedReps, setSelectedReps] = useState(false);
+
+  const handleRepsChange = (itemValue) => {
+    setSelectedReps(itemValue);
   };
 
 
@@ -444,9 +510,12 @@ const handleStartFirstTimer = () => {
 };
 
 const handleFirstTimerExpire = () => {
-  playSound()
+  playSound();
+
   setIsFirstTimerVisible(false);
   setIsSecondTimerVisible(true);
+
+  setSelectedReps(selectedReps === 0 ? 0 : (selectedReps - 1));
 };
 
 const handleStartSecondTimer = () => {
@@ -455,7 +524,8 @@ const handleStartSecondTimer = () => {
 };
 
 const handleSecondTimerExpire = () => {
-  playDescansoSound()
+  playDescansoSound();
+
   setIsSecondTimerVisible(false);
   setIsFirstTimerVisible(true);
 };
@@ -487,23 +557,27 @@ const handleSecondTimerExpire = () => {
               {() => (
                 <View style={{}}>
                   <TimerWithRemove id={timer.id} style={{}}/>
+                  <View style={{zIndex: 1, top: '15%', width: '19%'}}>
+                    <Text style={{left: 15, color: 'white', bottom: 10, position: 'absolute'}}>Descanso</Text>
                   <Picker
                     id={timer.id}
                     selectedValue={selectedSeconds}
                     onValueChange={handleSecondsChange}
-                    style={{ height: 50, width: 100, color: 'white', position:'absolute'}}
+                    style={{ height: 50, width: 100, color: 'white', position:'absolute', top: '15%', zIndex: 1}}
                     itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
                   >
                     {Array.from({ length: 400 }, (_, i) => (
                       <Picker.Item key={i} label={i.toString()} value={i} />
                     ))}
                   </Picker>
+                  </View>
                     {isFirstTimerVisible && (
                       <Timer
                         duration={timer.initialDuration !== null ? timer.initialDuration : 2} 
                         onExpire={handleFirstTimerExpire}
-                        autoStart={false}
+                        autoStart={selectedReps !== 0 ? true : false}
                         isFirstTimerVisible={isFirstTimerVisible}
+                        selectedSeconds={selectedSeconds}
                     />
                     )}
                     {isSecondTimerVisible && (
@@ -514,8 +588,22 @@ const handleSecondTimerExpire = () => {
                         <Timer duration={selectedSeconds} onExpire={handleSecondTimerExpire} />
                       </View>
                     )}
+                    <View style={{ height: 50, width: 100, position:'absolute', bottom: '14%', left: 0, zIndex: 1}}>
+                      <Text style={{textAlign: 'center', color: 'white'}}>Repeticiones</Text>
+                      <Picker
+                        selectedValue={selectedReps}
+                        onValueChange={handleRepsChange}
+                        style={{ color: 'white',}}
+                        itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
+                      >
+                        {Array.from({ length: 11 }, (_, i) => (
+                          <Picker.Item key={i} label={i.toString()} value={i} />
+                        ))}
+                      </Picker>
+                    </View>
                 </View>
               )}
+            
             </Tab.Screen>
           ))}
         <Tab.Screen name="Agregar" component={AddTimerScreen} />

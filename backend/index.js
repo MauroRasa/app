@@ -14,7 +14,7 @@ app.use(express.json()); // Middleware para analizar solicitudes JSON
 // Configuración del middleware de sesión
 app.use(
   session({
-    secret: 'secreto_super_seguro', // Cambia esto por un secreto más seguro
+    secret: 'secreto_super_seguro', // Cambiar esto por un secreto más seguro
     resave: false,
     saveUninitialized: true,
   })
@@ -124,7 +124,7 @@ app.post('/api/login', (req, res) => {
     if (result.length > 0) {
       // Las credenciales son correctas, el usuario existe
       // Generar un token único y enviarlo al cliente
-      const userToken = generateUserToken(usuario); // Asegúrate de implementar la función para generar un token único
+      const userToken = generateUserToken(usuario);
       req.session.user = usuario;
       res.status(200).json({ message: 'Inicio de sesión exitoso ', userToken });
     } else {

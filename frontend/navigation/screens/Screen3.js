@@ -126,7 +126,7 @@ const Triceps = () => {
 const Screen3 = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Bienvenido a FitPlanGains Videos</Text>
+            <Text style={styles.welcomeText}>FitPlanGains Videos</Text>
             <View style={styles.tabContainer}>
                 <Tab.Navigator
                     screenOptions={{
