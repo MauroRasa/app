@@ -41,7 +41,7 @@ const ModalRegistro = ({ isVisible, closeModal }) => {
                         Pass: Pass
                     };
             
-                fetch('http://192.168.43.67:3000/api/usuarios', {
+                fetch('http://192.168.100.219.67:3000/api/usuarios', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

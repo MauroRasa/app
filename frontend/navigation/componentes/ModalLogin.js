@@ -35,7 +35,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
         try {
           const userToken = await AsyncStorage.getItem('userToken');
           if (userToken) {
-            const response = await fetch('http://192.168.43.67:3000/api/verifyToken', {
+            const response = await fetch('http://192.168.100.219:3000/api/verifyToken', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const ModalLogin = ({ isVisible, closeModal }) => {
           return;
         }
         try {
-          const response = await fetch('http://192.168.43.67:3000/api/login', {
+          const response = await fetch('http://192.168.100.219:3000/api/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -209,13 +209,13 @@ export default function Temporizador({navigation, route }) {
   const [stopTime, setStopTime] = useState(null);
   const storageKey = 'timersFromTemporizador';
 
-  const [selectedSeconds, setSelectedSeconds] = useState(0);
+  const [selectedSecondsDescanso, setSelectedSecondsDescanso] = useState(0);
 
   const handleSecondsChange = (itemValue) => {
-    setSelectedSeconds(itemValue);
+    setSelectedSecondsDescanso(itemValue);
   };
 
-    const [selectedReps, setSelectedReps] = useState(false);
+    const [selectedReps, setSelectedReps] = useState(0);
 
   const handleRepsChange = (itemValue) => {
     setSelectedReps(itemValue);
@@ -557,13 +557,13 @@ const handleSecondTimerExpire = () => {
               {() => (
                 <View style={{}}>
                   <TimerWithRemove id={timer.id} style={{}}/>
-                  <View style={{zIndex: 1, top: '15%', width: '19%'}}>
-                    <Text style={{left: 15, color: 'white', bottom: 10, position: 'absolute'}}>Descanso</Text>
+                  <View style={{zIndex: 10, top: '14%', width: '19%', position: 'absolute'}}>
+                    <Text style={{left: 15, color: 'white', bottom: 0}}>Descanso</Text>
                   <Picker
                     id={timer.id}
-                    selectedValue={selectedSeconds}
+                    selectedValue={selectedSecondsDescanso}
                     onValueChange={handleSecondsChange}
-                    style={{ height: 50, width: 100, color: 'white', position:'absolute', top: '15%', zIndex: 1}}
+                    style={{ height: 50, width: 100, color: 'white', top: '0%', zIndex: 1}}
                     itemStyle={{ backgroundColor: 'black', color: 'white', fontSize: 20 }}
                   >
                     {Array.from({ length: 400 }, (_, i) => (
@@ -577,7 +577,6 @@ const handleSecondTimerExpire = () => {
                         onExpire={handleFirstTimerExpire}
                         autoStart={selectedReps !== 0 ? true : false}
                         isFirstTimerVisible={isFirstTimerVisible}
-                        selectedSeconds={selectedSeconds}
                     />
                     )}
                     {isSecondTimerVisible && (
@@ -585,7 +584,7 @@ const handleSecondTimerExpire = () => {
                         <TouchableOpacity onPress={handleStartFirstTimer} style={{}}>
                           {/* contenido del TouchableOpacity */}
                         </TouchableOpacity>
-                        <Timer duration={selectedSeconds} onExpire={handleSecondTimerExpire} />
+                        <Timer duration={selectedSecondsDescanso} onExpire={handleSecondTimerExpire} />
                       </View>
                     )}
                     <View style={{ height: 50, width: 100, position:'absolute', bottom: '14%', left: 0, zIndex: 1}}>
