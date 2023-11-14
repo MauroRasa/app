@@ -46,13 +46,21 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
 
   const windowHeight = Dimensions.get('window').height;
   const iconSize = windowHeight * 0.04;
+  const iconSizeSeconds = windowHeight * 0.055;
+  const barHeight = windowHeight * 0.52;
+  const buttonHeight = windowHeight * 0.6;
+  const tempoHeight = windowHeight * 0.27;
+
+
+  const windowWidth = Dimensions.get('window').width;
+  const barWidth = windowWidth * 0.46;
 
 
   return (
     <View style={styles.container}>
       {/* Contenedor para la sección de tiempo */}
       <View style={styles.timeContainer}>
-      <Text style={{ fontSize: 120, textAlign: 'center', top: 240, color: isFirstTimerVisible ? 'white' : '#FFD700' }}>
+      <Text style={{ fontSize: 120, textAlign: 'center', top: tempoHeight, color: isFirstTimerVisible ? 'white' : '#FFD700' }}>
           {minutes <= 9 ? (seconds <= 9 ? `0${minutes}:0${seconds}` : `0${minutes}:${seconds}`) : `${minutes}:${seconds}`}
         </Text>
         {/* Boton reset */}
@@ -67,34 +75,14 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
             position: 'absolute',
             alignSelf: 'center',
             left: '6%',
-            top: 500
+            top: buttonHeight
           }}
         >
           <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white'  }}>
-            <Icon name="refresh" size={iconSize} color="white" />
+            <Icon name="refresh" size={iconSizeSeconds} color="white" />
           </Text>
         </TouchableOpacity>
         {/* Boton +60 */}
-        <TouchableOpacity
-          onPress={() => {
-            const time = new Date();
-            time.setSeconds(time.getSeconds() + (60 + totalSeconds));
-            setSeSumoTiempo(true);
-            setSumarTiempo(totalSeconds + 60);
-            restart(time, isRunning ? true : false);
-          }}
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            left: '41%',
-            top: 500
-          }}
-        >
-          <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white', fontSize: 30, color: 'white'  }}>
-            +60
-          </Text>
-        </TouchableOpacity>
-        {/* Boton +10 */}
         <TouchableOpacity
           onPress={() => {
             const time = new Date();
@@ -106,19 +94,39 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            left: '77%',
-            top: 500
+            left: '41%',
+            top: buttonHeight
           }}
         >
           <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white', fontSize: 30, color: 'white'  }}>
-              +10
+            <Icon name="forward-10" size={iconSizeSeconds} color="white" />
+          </Text>
+        </TouchableOpacity>
+        {/* Boton +10 */}
+        <TouchableOpacity
+          onPress={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + (30 + totalSeconds));
+            setSeSumoTiempo(true);
+            setSumarTiempo(totalSeconds + 30);
+            restart(time, isRunning ? true : false);
+          }}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            left: '77%',
+            top: buttonHeight
+          }}
+        >
+          <Text style={{ backgroundColor: '#6C757D', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white', fontSize: 30, color: 'white'  }}>
+            <Icon name="forward-30" size={iconSizeSeconds} color="white" />
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={{ top: '53%', alignItems: 'center', backgroundColor: 'gray', flex: 1}}>
+      <View style={{ top: barHeight, alignItems: 'center', backgroundColor: 'gray', flex: 1}}>
         <AnimatedCircularProgress
           style={{ marginTop: 40 }}  
-          size={200}
+          size={barWidth}
           width={10}
           fill={seSumoTiempo === false ? ((duration - totalSeconds) / duration * 100) : ((sumarTiempo - totalSeconds) / sumarTiempo * 100)}
           tintColor="#6C757D"
@@ -164,12 +172,12 @@ function Timer({duration, onExpire, autoStart, isFirstTimerVisible}) {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            top: '13%',
+            top: '15%',
             right: 20
           }}
         >
-          <Text style={{ backgroundColor: 'gray', padding: 10, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white'  }}>
-            <Icon name="check" size={iconSize} color="white" />
+          <Text style={{ backgroundColor: 'gray', padding: 6, borderRadius: 10, textAlign: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'white'  }}>
+            <Icon name="alarm-on" size={iconSize} color="white" />
           </Text>
         </TouchableOpacity>
       </View>
