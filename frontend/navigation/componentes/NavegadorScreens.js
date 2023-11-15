@@ -107,10 +107,10 @@ function Componente1() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ width: 30, height: 30, backgroundColor: 'white', alignItems: 'center' }}>
+      <View style={{ width: 30, height: 30, backgroundColor: 'black', alignItems: 'center' }}>
         <PanGestureHandler onGestureEvent={handleSwipeGesture} shouldCancelWhenOutside={false} activeOffsetY={[-5, 5]}>
           <View style={{ flex: 1}}>
-            <Icon name= {Icono1 ? "barbell" : (Icono2 ? "restaurant" : "caret-forward-circle-outline")}  size={iconSize} color="gray" />
+            <Icon name= {Icono1 ? "barbell" : (Icono2 ? "restaurant" : "caret-forward-circle-outline")}  size={iconSize} color="white" />
           </View>
         </PanGestureHandler>
       </View>

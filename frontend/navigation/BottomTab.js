@@ -44,7 +44,7 @@ export const BottomTab = () => {
     return (
         <Tab.Navigator
             screenOptions = { ({ route }) => ({
-                // tabBarActiveTintColor: 'red',
+                tabBarActiveTintColor: 'white',
                 // tabBarActiveBackgroundColor: 'grey',
                 // tabBarInactiveBackgroundColor: 'orange',
                 showLabel: false, // Ocultar etiquetas
@@ -52,6 +52,7 @@ export const BottomTab = () => {
                     display: route.name === 'Temporizadores' ? 'none' : 'flex', // Oculta la tabBar si la ruta es 'Tempo'
                     height: route.name === 'Temporizadores' ? 0 : 55, // Ajusta la altura de la tabBar según la ruta
                     transition: 'height 0.3s', // Agrega una transición suave de 0.3 segundos
+                    backgroundColor: 'black'
                   },
                   tabBarHideOnKeyboard: true,
                 tabBarIcon: ({ focused, color, size }) => {
@@ -83,7 +84,7 @@ export const BottomTab = () => {
                     // FIN
 
                     // ASIGNAR VALORES A LOS ICONOS NORMALES
-                    return <Icon name = { iconName } size = { size } color = { color } />
+                    return <Icon name = { iconName } size = { size } color = { 'white' } />
                 }
             })} 
             animationEnabled={true}

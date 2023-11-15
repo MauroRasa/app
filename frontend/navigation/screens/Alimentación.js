@@ -32,6 +32,7 @@ const App = () => {
         <TextInput
           style={styles.input}
           placeholder="Edad"
+          placeholderTextColor="#fff"
           keyboardType="numeric"
           value={age}
           onChangeText={(text) => setAge(text)}
@@ -39,6 +40,7 @@ const App = () => {
         <TextInput
           style={styles.input}
           placeholder="Peso (kg)"
+          placeholderTextColor="#fff"
           keyboardType="numeric"
           value={weight}
           onChangeText={(text) => setWeight(text)}
@@ -46,6 +48,7 @@ const App = () => {
         <TextInput
           style={styles.input}
           placeholder="Altura (cm)"
+          placeholderTextColor="#fff"
           keyboardType="numeric"
           value={height}
           onChangeText={(text) => setHeight(text)}
@@ -73,7 +76,7 @@ const App = () => {
         </Picker>
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="Calcular" onPress={handleCalories} />
+        <Button title="Calcular" onPress={handleCalories} color="#4CAF50"/>
       </View>
       {result !== null && (
         <Text style={styles.resultText}>Calorías diarias recomendadas: {result.toFixed(2)}</Text>
@@ -87,12 +90,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#8b8b8b',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
+    color: 'white'
   },
   inputContainer: {
     width: '80%',
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
@@ -108,10 +112,12 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 10,
     marginBottom: 5,
+    color: 'white'
   },
   picker: {
     height: 50,
     width: '100%',
+    color: 'white'
   },
   buttonContainer: {
     width: '60%',

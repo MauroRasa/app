@@ -133,7 +133,28 @@ app.post('/api/login', (req, res) => {
     }
   });
 });
-// ...
+
+
+
+
+
+// AGREGADO
+
+app.get('/api/profile', (req, res) => {
+  // Verificar si el usuario ha iniciado sesión 
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: 'No hay sesión de usuario activa' });
+  }
+
+  const username = req.session.user;
+  res.status(200).json({ username });
+});
+
+// AGREGADO
+
+
+
+
 
 app.get('/api/logout', (req, res) => {
   // Destruir la sesión en el logout

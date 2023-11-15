@@ -51,45 +51,48 @@ const AlimentacionInicio = ({navigation}) => {
         </View>
       );
     };
-    
-    const styles = StyleSheet.create({
+
+    const styles = {
       container: {
         flex: 1,
+        backgroundColor: '#8b8b8b',
         padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
       },
       header: {
-        alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: 20,
       },
       headerText: {
-        fontSize: 32,
+        fontSize: 24,
         fontWeight: 'bold',
+        color: '#ffffff', 
         textAlign: 'center',
+        marginTop: 30
       },
       subHeaderText: {
-        fontSize: 18,
+        fontSize: 16,
+        color: '#ffffff',
         textAlign: 'center',
-        color: 'gray',
       },
       content: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
       },
       highlightedText: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
+        color: '#ffffff',
         marginBottom: 10,
+        textAlign: 'center',
       },
       normalText: {
         fontSize: 16,
+        color: '#ffffff',
+        marginBottom: 20,
         textAlign: 'center',
-        marginBottom: 10,
       },
       imageContainer: {
-        marginTop: 20,
+        marginBottom: 20,
       },
       image: {
         width: 300,
@@ -97,19 +100,15 @@ const AlimentacionInicio = ({navigation}) => {
         borderRadius: 10,
       },
       button: {
-        backgroundColor: '#FF6347',
-        paddingVertical: 15,
-        paddingHorizontal: 30,
+        backgroundColor: '#4CAF50', 
+        padding: 15,
         borderRadius: 10,
-        marginBottom: 20,
-        marginTop: 30
       },
       buttonText: {
-          color: '#fff',
-          fontSize: 16,
-          fontWeight: 'bold',
-          textAlign: 'center',
+        color: '#ffffff',
+        fontSize: 16,
+        textAlign: 'center',
       },
-    });
+    };
     
     export default AlimentacionInicio;

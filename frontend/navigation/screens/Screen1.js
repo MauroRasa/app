@@ -283,6 +283,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#525252'
       },
     overlay: {
       ...StyleSheet.absoluteFillObject,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
       height: 50,
     },
     item: {
-      backgroundColor: '#FFC888',
+      backgroundColor: '#8b8b8b',
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
@@ -312,19 +313,24 @@ const styles = StyleSheet.create({
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 10,
+      color: 'white'
     },
     muscleGroup: {
       fontSize: 18,
       marginBottom: 10,
+      color: '#f1f1f1'
     },
     exercise: {
       marginBottom: 5,
+      color: '#e7e7e7'
     },
     exerciseName: {
       fontWeight: 'bold',
+      color: '#e7e7e7'
     },
     exerciseDetails: {
       fontStyle: 'italic',
+      color: '#dadada'
     },
     title: {
       fontSize: 30,
@@ -332,6 +338,6 @@ const styles = StyleSheet.create({
       marginTop: 20,
       marginBottom: 20,
       alignSelf: 'center',
-      color: '#333',
+      color: '#fff',
     },
   });
